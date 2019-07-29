@@ -31,6 +31,8 @@ import org.sonarsource.plugins.mybatis.xml.XmlParser;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
+import static org.sonarsource.plugins.mybatis.MyBatisPlugin.STMTID_EXCLUDE_KEY;
+
 /**
  * The goal of this Sensor is analysis mybatis mapper files and generate issues.
  */
@@ -41,6 +43,7 @@ public class MyBatisLintSensor implements Sensor {
     protected final Configuration config;
     protected final FileSystem fileSystem;
     protected SensorContext context;
+    String stmtIdExcludeStr = "";
 
     /**
      * Use of IoC to get Settings, FileSystem, RuleFinder and ResourcePerspectives
@@ -59,6 +62,9 @@ public class MyBatisLintSensor implements Sensor {
     @Override
     public void execute(final SensorContext context) {
         this.context = context;
+        String[] stmtIdExclude = config.getStringArray(STMTID_EXCLUDE_KEY);
+        stmtIdExcludeStr = StringUtils.join(stmtIdExclude, ",");
+        LOGGER.info("stmtIdExcludeStr: " + stmtIdExcludeStr);
         // analysis mybatis mapper files and generate issues
         Map mybatisMapperMap = new HashMap(16);
 
@@ -133,16 +139,20 @@ public class MyBatisLintSensor implements Sensor {
                             LOGGER.info("id=" + stmtId + ",");
                             LOGGER.info("sql=" + sql);
 
-                            // get lineNumber by mapper file and keyWord
-                            String[] stmtIdSplit = stmtId.split("\\.");
-                            String stmtIdTail = stmtIdSplit[stmtIdSplit.length - 1];
+                            if (stmtIdExcludeStr.contains(stmtId)) {
+                                LOGGER.info("stmt id exclude:" + stmtId);
+                            } else {
+                                // get lineNumber by mapper file and keyWord
+                                String[] stmtIdSplit = stmtId.split("\\.");
+                                String stmtIdTail = stmtIdSplit[stmtIdSplit.length - 1];
 
-                            String sqlCmdType = stmt.getSqlCommandType().toString().toLowerCase();
+                                String sqlCmdType = stmt.getSqlCommandType().toString().toLowerCase();
 
-                            Integer lineNumber = getLineNumber(sourceMapperFilePath, stmtIdTail, sqlCmdType);
+                                Integer lineNumber = getLineNumber(sourceMapperFilePath, stmtIdTail, sqlCmdType);
 
-                            // match Rule And Save Issue
-                            matchRuleAndSaveIssue(sql, sourceMapperFilePath, lineNumber);
+                                // match Rule And Save Issue
+                                matchRuleAndSaveIssue(sql, sourceMapperFilePath, lineNumber);
+                            }
                         }
                     }
                 }
