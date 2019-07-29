@@ -12,6 +12,7 @@ import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.mapping.SqlSource;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
+import org.dom4j.DocumentType;
 import org.dom4j.Element;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
@@ -80,7 +81,14 @@ public class MyBatisLintSensor implements Sensor {
                 XmlParser xmlParser = new XmlParser();
                 Document document = xmlParser.parse(xmlFile);
                 Element rootElement = document.getRootElement();
-                String publicIdOfDocType = document.getDocType().getPublicID();
+                String publicIdOfDocType = "";
+                DocumentType documentType = document.getDocType();
+                if (null != documentType) {
+                    publicIdOfDocType = documentType.getPublicID();
+                    if (null == publicIdOfDocType) {
+                        publicIdOfDocType = "";
+                    }
+                }
                 if ("mapper".equals(rootElement.getName()) && publicIdOfDocType.contains("mybatis.org")) {
                     LOGGER.info("handle mybatis mapper xml:" + xmlFilePath);
                     // handle mybatis mapper file
