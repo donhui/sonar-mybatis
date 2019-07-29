@@ -178,7 +178,8 @@ public class MyBatisLintSensor implements Sensor {
                 getResourceAndSaveIssue(mybatisError);
             } else if (sql.startsWith("select") || sql.startsWith("SELECT")) {
                 if (!(sql.contains("sum(") || sql.contains("SUM(") || sql.contains("count(") || sql.contains("COUNT(")
-                    || sql.contains("max(") || sql.contains("MAX(") || sql.contains("min(") || sql.contains("MIN("))) {
+                    || sql.contains("max(") || sql.contains("MAX(") || sql.contains("min(") || sql.contains("MIN(")
+                    || sql.contains("limit") || sql.contains("LIMIT"))) {
                     // select statement contains 1=1
                     String errorMessage = "select statement should not include 1=1";
                     ErrorDataFromLinter mybatisError = new ErrorDataFromLinter("MyBatisMapperCheckRule1", errorMessage,
@@ -203,7 +204,8 @@ public class MyBatisLintSensor implements Sensor {
                 getResourceAndSaveIssue(mybatisError);
             } else if (sql.startsWith("select") || sql.startsWith("SELECT")) {
                 if (!(sql.contains("sum(") || sql.contains("SUM(") || sql.contains("count(") || sql.contains("COUNT(")
-                    || sql.contains("max(") || sql.contains("MAX(") || sql.contains("min(") || sql.contains("MIN("))) {
+                    || sql.contains("max(") || sql.contains("MAX(") || sql.contains("min(") || sql.contains("MIN(")
+                    || sql.contains("limit") || sql.contains("LIMIT"))) {
                     // select statement may not has where condition
                     String errorMessage = "select statement may not has where condition";
                     ErrorDataFromLinter mybatisError = new ErrorDataFromLinter("MyBatisMapperCheckRule4", errorMessage,
