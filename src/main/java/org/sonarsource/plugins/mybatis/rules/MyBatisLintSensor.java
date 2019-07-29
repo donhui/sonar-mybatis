@@ -103,9 +103,7 @@ public class MyBatisLintSensor implements Sensor {
                         mybatisConfiguration, mapperResource.toString(), mybatisConfiguration.getSqlFragments());
                     xmlMapperBuilder.parse();
                 }
-            } catch (DocumentException e) {
-                LOGGER.warn(e.toString());
-            } catch (IOException e) {
+            } catch (DocumentException | IOException e) {
                 LOGGER.warn(e.toString());
             }
         }
