@@ -43,7 +43,7 @@ public class MyBatisLintSensor implements Sensor {
     protected final Configuration config;
     protected final FileSystem fileSystem;
     protected SensorContext context;
-    String stmtIdExcludeStr = "";
+    private String stmtIdExcludeStr = "";
 
     /**
      * Use of IoC to get Settings, FileSystem, RuleFinder and ResourcePerspectives
