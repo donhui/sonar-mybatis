@@ -80,7 +80,8 @@ public class MyBatisLintSensor implements Sensor {
                 XmlParser xmlParser = new XmlParser();
                 Document document = xmlParser.parse(xmlFile);
                 Element rootElement = document.getRootElement();
-                if ("mapper".equals(rootElement.getName())) {
+                String publicIdOfDocType = document.getDocType().getPublicID();
+                if ("mapper".equals(rootElement.getName()) && publicIdOfDocType.contains("mybatis.org")) {
                     LOGGER.info("handle mybatis mapper xml:" + xmlFilePath);
                     // handle mybatis mapper file
                     String dstXmlFilePath = xmlFilePath + "-reduced.xml";
