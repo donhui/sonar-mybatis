@@ -75,7 +75,7 @@ public class MyBatisLintSensor implements Sensor {
         FileSystem fs = context.fileSystem();
         Iterable<InputFile> xmlInputFiles = fs.inputFiles(fs.predicates().hasLanguage("xml"));
         for (InputFile xmlInputFile : xmlInputFiles) {
-            String xmlFilePath = xmlInputFile.absolutePath();
+            String xmlFilePath = xmlInputFile.uri().getPath();
             File xmlFile = new File(xmlFilePath);
             try {
                 XmlParser xmlParser = new XmlParser();
