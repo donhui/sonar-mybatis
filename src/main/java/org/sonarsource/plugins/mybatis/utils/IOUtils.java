@@ -22,13 +22,8 @@ public class IOUtils {
     public static Integer getLineNumber(String filePath, String keyWord1, String keyWord2) {
         Integer lineNumber = null;
         // lineNumberReader
-        LineNumberReader lineNumberReader = null;
-        FileInputStream fileInputStream = null;
-        InputStreamReader inputStreamReader = null;
-        try {
-            fileInputStream = new FileInputStream(filePath);
-            inputStreamReader = new InputStreamReader(fileInputStream, "UTF-8");
-            lineNumberReader = new LineNumberReader(inputStreamReader);
+        try (LineNumberReader lineNumberReader =
+            new LineNumberReader(new InputStreamReader(new FileInputStream(filePath), "UTF-8"))) {
             String readLine = null;
             while ((readLine = lineNumberReader.readLine()) != null) {
                 // check if contains
@@ -39,23 +34,7 @@ public class IOUtils {
             }
         } catch (IOException e) {
             LOGGER.warn(e.toString());
-        } finally {
-            // close stream
-            closeStream(lineNumberReader);
-            closeStream(inputStreamReader);
-            closeStream(fileInputStream);
         }
         return lineNumber;
-    }
-
-    private static void closeStream(Closeable stream) {
-        if (stream != null) {
-            try {
-                stream.close();
-            } catch (IOException e) {
-                LOGGER.warn(e.toString());
-                stream = null;
-            }
-        }
     }
 }
