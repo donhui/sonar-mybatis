@@ -16,6 +16,14 @@
             <url>https://opensource.org/licenses/Apache-2.0</url>
         </license>
     </licenses>
+    <developers>
+        <developer>
+            <id>donhui</id>
+            <name>donghui</name>
+            <email>977675308@nqq.com</email>
+            <url>https://github.com/donhui</url>
+        </developer>
+    </developers>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
