@@ -8,7 +8,7 @@
     <packaging>sonar-plugin</packaging>
     <version>1.0.0</version>
 
-    <name>MyBatis Plugin for SonarQube 6.7.x LTS</name>
+    <name>MyBatis Plugin for SonarQube</name>
     <description>MyBatis Plugin for SonarQube: Custom Rule for Check Rick SQL of Mybatis Mapper XML</description>
     <licenses>
         <license>
