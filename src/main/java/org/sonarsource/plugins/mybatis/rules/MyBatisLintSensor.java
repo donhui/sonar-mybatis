@@ -44,7 +44,7 @@ public class MyBatisLintSensor implements Sensor {
     protected final Configuration config;
     protected final FileSystem fileSystem;
     protected SensorContext context;
-    private String stmtIdExcludeStr = "";
+    private List<String> stmtIdExcludeList = new ArrayList<>();
 
     /**
      * Use of IoC to get Settings, FileSystem, RuleFinder and ResourcePerspectives
@@ -64,8 +64,8 @@ public class MyBatisLintSensor implements Sensor {
     public void execute(final SensorContext context) {
         this.context = context;
         String[] stmtIdExclude = config.getStringArray(STMTID_EXCLUDE_KEY);
-        stmtIdExcludeStr = StringUtils.join(stmtIdExclude, ",");
-        LOGGER.info("stmtIdExcludeStr: " + stmtIdExcludeStr);
+        Collections.addAll(stmtIdExcludeList,stmtIdExclude);
+        LOGGER.info("stmtIdExcludeList: " + stmtIdExcludeList.toString());
         // analysis mybatis mapper files and generate issues
         Map mybatisMapperMap = new HashMap(16);
 
@@ -146,7 +146,7 @@ public class MyBatisLintSensor implements Sensor {
                             LOGGER.info("id=" + stmtId + ",");
                             LOGGER.info("sql=" + sql);
 
-                            if (stmtIdExcludeStr.contains(stmtId)) {
+                            if (stmtIdExcludeList.contains(stmtId)) {
                                 LOGGER.info("stmt id exclude:" + stmtId);
                             } else {
                                 // get lineNumber by mapper file and keyWord
