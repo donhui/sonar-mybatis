@@ -9,7 +9,7 @@
     <version>1.0.0</version>
 
     <name>MyBatis Plugin for SonarQube</name>
-    <description>MyBatis Plugin for SonarQube: Custom Rule for Check Rick SQL of Mybatis Mapper XML</description>
+    <description>Check Rick SQL of Mybatis Mapper XML</description>
     <licenses>
         <license>
             <name>Apache License, Version 2.0</name>
