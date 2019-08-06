@@ -64,7 +64,7 @@ public class MyBatisLintSensor implements Sensor {
     public void execute(final SensorContext context) {
         this.context = context;
         String[] stmtIdExclude = config.getStringArray(STMTID_EXCLUDE_KEY);
-        Collections.addAll(stmtIdExcludeList,stmtIdExclude);
+        Collections.addAll(stmtIdExcludeList, stmtIdExclude);
         LOGGER.info("stmtIdExcludeList: " + stmtIdExcludeList.toString());
         // analysis mybatis mapper files and generate issues
         Map mybatisMapperMap = new HashMap(16);
@@ -179,58 +179,53 @@ public class MyBatisLintSensor implements Sensor {
     }
 
     private void matchRuleAndSaveIssue(String sql, String sourceMapperFilePath, Integer lineNumber) {
-        // match rule and create issue
-        if (sql.contains("1=1") || sql.contains("1 = 1") || sql.contains("1= 1") || sql.contains("1 =1")) {
-            if (sql.startsWith("delete") || sql.startsWith("DELETE")) {
+        sql = sql.toLowerCase();
+        String errorMessage = "";
+        String ruleId = "";
+        if (containsOneEqualsOne(sql)) {
+            if (sql.startsWith("delete")) {
                 // delete statement contains 1=1
-                String errorMessage = "delete statement should not include 1=1";
-                ErrorDataFromLinter mybatisError =
-                    new ErrorDataFromLinter("MyBatisMapperCheckRule3", errorMessage, sourceMapperFilePath, lineNumber);
-                getResourceAndSaveIssue(mybatisError);
-            } else if (sql.startsWith("upstate") || sql.startsWith("UPDATE")) {
+                errorMessage = "delete statement should not include 1=1";
+                ruleId = "MyBatisMapperCheckRule3";
+            } else if (sql.startsWith("update")) {
                 // update statement contains 1=1
-                String errorMessage = "update statement should not include 1=1";
-                ErrorDataFromLinter mybatisError =
-                    new ErrorDataFromLinter("MyBatisMapperCheckRule2", errorMessage, sourceMapperFilePath, lineNumber);
-                getResourceAndSaveIssue(mybatisError);
-            } else if (sql.startsWith("select") || sql.startsWith("SELECT")) {
-                if (!(sql.contains("sum(") || sql.contains("SUM(") || sql.contains("count(") || sql.contains("COUNT(")
-                    || sql.contains("max(") || sql.contains("MAX(") || sql.contains("min(") || sql.contains("MIN(")
-                    || sql.contains("limit") || sql.contains("LIMIT"))) {
-                    // select statement contains 1=1
-                    String errorMessage = "select statement should not include 1=1";
-                    ErrorDataFromLinter mybatisError = new ErrorDataFromLinter("MyBatisMapperCheckRule1", errorMessage,
-                        sourceMapperFilePath, lineNumber);
-                    getResourceAndSaveIssue(mybatisError);
-                }
+                errorMessage = "update statement should not include 1=1";
+                ruleId = "MyBatisMapperCheckRule2";
+            } else if (sql.startsWith("select") && !containsFunctionOrLimit(sql)) {
+                // select statement contains 1=1
+                errorMessage = "select statement should not include 1=1";
+                ruleId = "MyBatisMapperCheckRule1";
+            }
+        } else if (!sql.contains("where")) {
+            if (sql.startsWith("delete")) {
+                // delete statement may not has where condition
+                errorMessage = "delete statement may not has where condition";
+                ruleId = "MyBatisMapperCheckRule6";
+            } else if (sql.startsWith("update")) {
+                // update statement may not has where condition
+                errorMessage = "update statement may not has where condition";
+                ruleId = "MyBatisMapperCheckRule5";
+            } else if (sql.startsWith("select") && !containsFunctionOrLimit(sql)) {
+                // select statement may not has where condition
+                errorMessage = "select statement may not has where condition";
+                ruleId = "MyBatisMapperCheckRule4";
             }
         }
 
-        if (!(sql.contains("where") || sql.contains("WHERE"))) {
-            if (sql.startsWith("delete") || sql.startsWith("DELETE")) {
-                // delete statement may not has where condition
-                String errorMessage = "delete statement may not has where condition";
-                ErrorDataFromLinter mybatisError =
-                    new ErrorDataFromLinter("MyBatisMapperCheckRule6", errorMessage, sourceMapperFilePath, lineNumber);
-                getResourceAndSaveIssue(mybatisError);
-            } else if (sql.startsWith("upstate") || sql.startsWith("UPDATE")) {
-                // delete statement may not has where condition
-                String errorMessage = "update statement may not has where condition";
-                ErrorDataFromLinter mybatisError =
-                    new ErrorDataFromLinter("MyBatisMapperCheckRule5", errorMessage, sourceMapperFilePath, lineNumber);
-                getResourceAndSaveIssue(mybatisError);
-            } else if (sql.startsWith("select") || sql.startsWith("SELECT")) {
-                if (!(sql.contains("sum(") || sql.contains("SUM(") || sql.contains("count(") || sql.contains("COUNT(")
-                    || sql.contains("max(") || sql.contains("MAX(") || sql.contains("min(") || sql.contains("MIN(")
-                    || sql.contains("limit") || sql.contains("LIMIT"))) {
-                    // select statement may not has where condition
-                    String errorMessage = "select statement may not has where condition";
-                    ErrorDataFromLinter mybatisError = new ErrorDataFromLinter("MyBatisMapperCheckRule4", errorMessage,
-                        sourceMapperFilePath, lineNumber);
-                    getResourceAndSaveIssue(mybatisError);
-                }
-            }
+        if (!"".equals(ruleId)) {
+            ErrorDataFromLinter mybatisError =
+                new ErrorDataFromLinter(ruleId, errorMessage, sourceMapperFilePath, lineNumber);
+            getResourceAndSaveIssue(mybatisError);
         }
+    }
+
+    private boolean containsOneEqualsOne(String sql) {
+        return sql.contains("1=1") || sql.contains("1 = 1") || sql.contains("1= 1") || sql.contains("1 =1");
+    }
+
+    private boolean containsFunctionOrLimit(String sql) {
+        return sql.contains("sum(") || sql.contains("count(") || sql.contains("max(") || sql.contains("min(")
+            || sql.contains("limit");
     }
 
     private void getResourceAndSaveIssue(final ErrorDataFromLinter error) {
