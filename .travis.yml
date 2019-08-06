@@ -1,0 +1,10 @@
+language: java
+
+addons:
+  sonarcloud:
+    organization: "donhui"
+    token:
+      secure: "6943068b8011272d514d550d075a76e94ebcb4d7"
+
+script:
+  - mvn clean compile sonar:sonar
