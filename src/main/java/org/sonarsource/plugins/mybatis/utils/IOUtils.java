@@ -4,6 +4,7 @@ import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 public class IOUtils {
 
@@ -23,7 +24,7 @@ public class IOUtils {
         Integer lineNumber = null;
         // lineNumberReader
         try (LineNumberReader lineNumberReader =
-            new LineNumberReader(new InputStreamReader(new FileInputStream(filePath), "UTF-8"))) {
+            new LineNumberReader(new InputStreamReader(new FileInputStream(filePath), StandardCharsets.UTF_8))) {
             String readLine = null;
             while ((readLine = lineNumberReader.readLine()) != null) {
                 // check if contains
