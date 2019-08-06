@@ -9,7 +9,8 @@
     <version>1.0.0</version>
 
     <name>MyBatis Plugin for SonarQube</name>
-    <description>Check Rick SQL of Mybatis Mapper XML</description>
+    <description>Check Risk SQL of Mybatis Mapper XML</description>
+    <url>https://github.com/donhui/sonar-mybatis</url>
     <licenses>
         <license>
             <name>Apache License, Version 2.0</name>
@@ -24,6 +25,12 @@
             <url>https://github.com/donhui</url>
         </developer>
     </developers>
+    <scm>
+        <url>https://github.com/donhui/sonar-mybatis</url>
+    </scm>
+    <issueManagement>
+        <url>https://github.com/donhui/sonar-mybatis/issues</url>
+    </issueManagement>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
