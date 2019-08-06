@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.com/donhui/sonar-mybatis.svg?branch=master)](https://travis-ci.com/donhui/sonar-mybatis)
+[![SonarCloud Status](https://sonarcloud.io/api/project_badges/measure?project=donhui_sonar-mybatis&metric=alert_status)](https://sonarcloud.io/dashboard?id=donhui_sonar-mybatis)
+
 [README 中文版](README.zh.md)
 
 ## SonarQube MyBatis Plugin

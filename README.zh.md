@@ -1,3 +1,7 @@
+[![Build Status](https://travis-ci.com/donhui/sonar-mybatis.svg?branch=master)](https://travis-ci.com/donhui/sonar-mybatis)
+[![SonarCloud Status](https://sonarcloud.io/api/project_badges/measure?project=donhui_sonar-mybatis&metric=alert_status)](https://sonarcloud.io/dashboard?id=donhui_sonar-mybatis)
+
+
 ## SonarQube MyBatis 插件
 MyBatis SonarQube Plugin ：自定义规则用于检查 Mybatis Mapper XML 文件中的风险 SQL。
 
