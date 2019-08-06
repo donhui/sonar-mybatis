@@ -39,5 +39,6 @@ For special issues of statements, if you want ignore them, you can put the state
 
 ## Contribute
 Please report bugs and feature requests at https://github.com/donhui/sonar-mybatis/issues.
+
 Or you can submit pull requests for fix bugs or create new features, any contribution is welcome.
 
