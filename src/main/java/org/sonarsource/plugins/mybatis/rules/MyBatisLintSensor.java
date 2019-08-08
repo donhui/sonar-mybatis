@@ -68,6 +68,7 @@ public class MyBatisLintSensor implements Sensor {
         LOGGER.info("stmtIdExcludeList: " + stmtIdExcludeList.toString());
         // analysis mybatis mapper files and generate issues
         Map mybatisMapperMap = new HashMap(16);
+        List<File> reducedFileList = new ArrayList<>();
 
         org.apache.ibatis.session.Configuration mybatisConfiguration = new org.apache.ibatis.session.Configuration();
 
@@ -94,6 +95,7 @@ public class MyBatisLintSensor implements Sensor {
                     // handle mybatis mapper file
                     String dstXmlFilePath = xmlFilePath + "-reduced.xml";
                     File dstXmlFile = new File(dstXmlFilePath);
+                    reducedFileList.add(dstXmlFile);
                     MyBatisMapperXmlHandler myBatisMapperXmlHandler = new MyBatisMapperXmlHandler();
                     myBatisMapperXmlHandler.handleMapperFile(xmlFile, dstXmlFile);
                     mybatisMapperMap.put(dstXmlFilePath, xmlFilePath);
@@ -111,6 +113,13 @@ public class MyBatisLintSensor implements Sensor {
         // parse MappedStatements
         Set<MappedStatement> stmts = new HashSet<>(mybatisConfiguration.getMappedStatements());
         parseStatement(stmts, mybatisMapperMap);
+
+        // clean reduced.xml
+        for (File file : reducedFileList) {
+            if (file.exists() && file.isFile()) {
+                file.delete();
+            }
+        }
     }
 
     private void parseStatement(Set<MappedStatement> stmts, Map mybatisMapperMap) {
