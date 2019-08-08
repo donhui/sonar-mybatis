@@ -5,7 +5,7 @@
 ## SonarQube MyBatis 插件
 MyBatis SonarQube Plugin ：自定义规则用于检查 Mybatis Mapper XML 文件中的风险 SQL。
 
-## What is Risk SQL?
+## 什么是风险 SQL?
 风险 SQL 是指在 mybatis mapper 文件中，有一些动态 SQL，例如 `<if test="">`，
 如果没有命中后出来的 SQL 有比较大的风险。
 
