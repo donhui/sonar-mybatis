@@ -9,7 +9,7 @@
     <version>1.0.0</version>
 
     <name>MyBatis Plugin for SonarQube</name>
-    <description>Check Risk SQL of Mybatis Mapper XML</description>
+    <description>Rules to check SQL statements in MyBatis Mapper XML files</description>
     <url>https://github.com/donhui/sonar-mybatis</url>
     <licenses>
         <license>
