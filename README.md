@@ -4,7 +4,7 @@
 [README 中文版](README.zh.md)
 
 ## SonarQube MyBatis Plugin
-MyBatis Plugin for SonarQube: Custom Rule for Check Risk SQL of Mybatis Mapper XML.
+MyBatis Plugin for SonarQube: Rules to check SQL statements in MyBatis Mapper XML files.
 
 ## What is Risk SQL?
 Risk SQL is that in the mybatis mapper file, there are some dynamic SQL, such as `<if test=""></if>` elements of Mapper file, 
