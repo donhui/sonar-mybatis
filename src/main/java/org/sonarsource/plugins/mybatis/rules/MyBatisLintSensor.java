@@ -207,16 +207,16 @@ public class MyBatisLintSensor implements Sensor {
             }
         } else if (!sql.contains("where")) {
             if (sql.startsWith("delete")) {
-                // delete statement may not has where condition
-                errorMessage = "delete statement may not has where condition";
+                // Where condition not found in delete statement
+                errorMessage = "Where condition not found in delete statement";
                 ruleId = "MyBatisMapperCheckRule6";
             } else if (sql.startsWith("update")) {
-                // update statement may not has where condition
-                errorMessage = "update statement may not has where condition";
+                // Where condition not found in update statement
+                errorMessage = "Where condition not found in update statement";
                 ruleId = "MyBatisMapperCheckRule5";
             } else if (sql.startsWith("select") && !containsFunctionOrLimit(sql)) {
-                // select statement may not has where condition
-                errorMessage = "select statement may not has where condition";
+                // Where condition not found in select statement
+                errorMessage = "Where condition not found in select statement";
                 ruleId = "MyBatisMapperCheckRule4";
             }
         }

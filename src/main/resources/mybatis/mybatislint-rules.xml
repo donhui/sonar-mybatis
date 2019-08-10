@@ -3,7 +3,9 @@
         <key>MyBatisMapperCheckRule1</key>
         <name>select statement should not include 1=1</name>
         <internalKey>MyBatisMapperCheckRule1</internalKey>
-        <description>select statement should not include 1=1</description>
+        <description>select statement should not include 1=1, it is a useless code and bad practice, suggest removing
+            it.
+        </description>
         <severity>MINOR</severity>
         <cardinality>SINGLE</cardinality>
         <status>READY</status>
@@ -17,7 +19,9 @@
         <key>MyBatisMapperCheckRule2</key>
         <name>update statement should not include 1=1</name>
         <internalKey>MyBatisMapperCheckRule2</internalKey>
-        <description>update statement should not include 1=1</description>
+        <description>update statement should not include 1=1, it is a useless code and bad practice, suggest removing
+            it.
+        </description>
         <severity>MAJOR</severity>
         <cardinality>SINGLE</cardinality>
         <status>READY</status>
@@ -31,7 +35,9 @@
         <key>MyBatisMapperCheckRule3</key>
         <name>delete statement should not include 1=1</name>
         <internalKey>MyBatisMapperCheckRule3</internalKey>
-        <description>delete statement should not include 1=1</description>
+        <description>delete statement should not include 1=1, it is a useless code and bad practice, suggest removing
+            it.
+        </description>
         <severity>CRITICAL</severity>
         <cardinality>SINGLE</cardinality>
         <status>READY</status>
@@ -43,9 +49,12 @@
     </rule>
     <rule>
         <key>MyBatisMapperCheckRule4</key>
-        <name>select statement may not have where condition</name>
+        <name>Where condition not found in select statement</name>
         <internalKey>MyBatisMapperCheckRule4</internalKey>
-        <description>select statement may not has where condition</description>
+        <description>If all parameters in the update statement of Mapper XML file are null,
+            the sql will not have where condition, then it will select all records from the table, which may lead to
+            performance issues. Suggest using native dynamic sql instead of MyBatis dynamic SQL for required parameters.
+        </description>
         <severity>MINOR</severity>
         <cardinality>SINGLE</cardinality>
         <status>READY</status>
@@ -57,9 +66,13 @@
     </rule>
     <rule>
         <key>MyBatisMapperCheckRule5</key>
-        <name>update statement may not has where condition</name>
+        <name>Where condition not found in update statement</name>
         <internalKey>MyBatisMapperCheckRule5</internalKey>
-        <description>update statement may not has where condition</description>
+        <description>If all parameters in the update statement of Mapper XML file are null,
+            the sql will not have where condition, then it will update all records from the table, which will result
+            production accident. Suggest using native dynamic sql instead of MyBatis dynamic SQL for required
+            parameters.
+        </description>
         <severity>MAJOR</severity>
         <cardinality>SINGLE</cardinality>
         <status>READY</status>
@@ -71,9 +84,13 @@
     </rule>
     <rule>
         <key>MyBatisMapperCheckRule6</key>
-        <name>delete statement may not has where condition</name>
+        <name>Where condition not found in delete statement</name>
         <internalKey>MyBatisMapperCheckRule6</internalKey>
-        <description>delete statement may not has where condition</description>
+        <description>If all parameters in the delete statement of Mapper XML file are null,
+            the sql will not have where condition, then it will delete all records from the table, which will result
+            production accident. Suggest using native dynamic sql instead of MyBatis dynamic SQL for required
+            parameters.
+        </description>
         <severity>CRITICAL</severity>
         <cardinality>SINGLE</cardinality>
         <status>READY</status>
