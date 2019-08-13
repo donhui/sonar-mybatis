@@ -6,7 +6,7 @@
     <groupId>org.sonarsource.plugins.mybatis</groupId>
     <artifactId>sonar-mybatis-plugin</artifactId>
     <packaging>sonar-plugin</packaging>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 
     <name>MyBatis Plugin for SonarQube</name>
     <description>Rules to check SQL statements in MyBatis Mapper XML files</description>
