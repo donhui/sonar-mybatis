@@ -7,5 +7,5 @@ addons:
       secure: "6943068b8011272d514d550d075a76e94ebcb4d7"
 
 script:
-  - cp src/site/resources/settings.xml $HOME/.m2/settings.xml
+  - cp travis/settings.xml $HOME/.m2/settings.xml
   - mvn clean compile sonar:sonar
