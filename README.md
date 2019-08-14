@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.com/donhui/sonar-mybatis.svg?branch=master)](https://travis-ci.com/donhui/sonar-mybatis)
 [![SonarCloud Status](https://sonarcloud.io/api/project_badges/measure?project=donhui_sonar-mybatis&metric=alert_status)](https://sonarcloud.io/dashboard?id=donhui_sonar-mybatis)
+[![GitHub All Releases](https://img.shields.io/github/downloads/donhui/sonar-mybatis/total)](https://github.com/donhui/sonar-mybatis/releases/)
 
 [README 中文版](README.zh.md)
 
@@ -27,6 +28,25 @@ WHERE 1=1
 There are 6 built-in mybatis rules, which select, update and delete statement has two rules.
 
 ![mybatis-rules](images/mybatis-rules.png)
+
+## How to install it?
+There are two options to install a plugin into SonarQube:
+- Marketplace - Installs plugins automatically, from the SonarQube UI.
+- Manual Installation - You'll use this method if your SonarQube instance doesn't have access to the Internet.
+
+### Marketplace
+If you have access to the Internet and you are connected with a SonarQube user having the Global Permission "Administer System", you can go to Administration > Marketplace.
+- Find the plugin by search `mybatis`
+- Click on Install and wait for the download to be processed
+
+Once download is complete, a "Restart" button will be available to restart your instance.
+
+### Manual Installation
+The plugin can be downloaded from [github release](https://github.com/donhui/sonar-mybatis/releases/) .
+
+Put the downloaded jar in `$SONARQUBE_HOME/extensions/plugins`, removing any previous versions of the same plugins.
+
+Once done, you will need to restart your SonarQube Server.
 
 ## How to Use it?
 There is an example of using maven build command:

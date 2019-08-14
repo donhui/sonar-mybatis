@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.com/donhui/sonar-mybatis.svg?branch=master)](https://travis-ci.com/donhui/sonar-mybatis)
 [![SonarCloud Status](https://sonarcloud.io/api/project_badges/measure?project=donhui_sonar-mybatis&metric=alert_status)](https://sonarcloud.io/dashboard?id=donhui_sonar-mybatis)
-
+[![GitHub All Releases](https://img.shields.io/github/downloads/donhui/sonar-mybatis/total)](https://github.com/donhui/sonar-mybatis/releases/)
 
 ## SonarQube MyBatis 插件
 MyBatis SonarQube Plugin ：自定义规则用于检查 Mybatis Mapper XML 文件中的风险 SQL。
@@ -26,6 +26,25 @@ WHERE 1=1
 有6个内置的规则，select、update 以及 delete 语句分别有2个规则。
 
 ![mybatis-rules](images/mybatis-rules.png)
+
+## 如何安装？
+在SonarQube中安装插件有两种选择：
+- 应用市场（Marketplace） - 自动从 SonarQube UI 安装插件。
+- 手动安装 - 如果您的 SonarQube 实例无法访问互联网，请将使用此方法。
+
+### 应用市场（Marketplace）
+如果您能够访问互联网，并且您的用户具有全局权限“管理系统”的权限，则可以访问"配置 > 应用市场"。
+- 通过搜索 `mybatis` 找到该插件
+- 点击安装然后等待下载完成
+
+下载完成后，将使用“重启”按钮重新启动 SonarQube 实例。
+
+### 手动安装
+该插件可以从 [github release](https://github.com/donhui/sonar-mybatis/releases/) 下载。
+
+将下载的 jar 放到 `$SONARQUBE_HOME/extensions/plugins` 目录，并移除该插件的旧版本。
+
+一旦完成，您将需要重新启动 SonarQube 服务器。
 
 ## 如何使用？
 使用 maven 构建命令的示例如下：
