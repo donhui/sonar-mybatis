@@ -60,6 +60,10 @@ For special issues of statements, if you want ignore them, you can put the state
 
 ![stmt-id-exclude](images/stmt-id-exclude.png)
 
+## Skip MyBatis Sensor
+If you want to skip mybatis sensor sometimes, you can change the global properties `sonar.mybatis.skip` to `true` or add the parameter in the command:
+`-Dsonar.mybatis.skip=true` .
+
 ## Contribute
 Please report bugs and feature requests at https://github.com/donhui/sonar-mybatis/issues.
 
