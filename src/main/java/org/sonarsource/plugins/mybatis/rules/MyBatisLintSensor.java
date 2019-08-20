@@ -32,6 +32,7 @@ import org.sonarsource.plugins.mybatis.xml.XmlParser;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
+import static org.sonarsource.plugins.mybatis.MyBatisPlugin.SONAR_MYBATIS_SKIP;
 import static org.sonarsource.plugins.mybatis.MyBatisPlugin.STMTID_EXCLUDE_KEY;
 
 /**
@@ -63,6 +64,11 @@ public class MyBatisLintSensor implements Sensor {
     @Override
     public void execute(final SensorContext context) {
         this.context = context;
+        Boolean sonarMyBatisSkip = config.getBoolean(SONAR_MYBATIS_SKIP).get();
+        if(sonarMyBatisSkip){
+            LOGGER.info("MyBatis sensor is skiped.");
+            return;
+        }
         String[] stmtIdExclude = config.getStringArray(STMTID_EXCLUDE_KEY);
         Collections.addAll(stmtIdExcludeList, stmtIdExclude);
         LOGGER.info("stmtIdExcludeList: " + stmtIdExcludeList.toString());

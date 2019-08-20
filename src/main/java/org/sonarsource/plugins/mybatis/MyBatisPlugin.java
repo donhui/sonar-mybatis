@@ -14,6 +14,7 @@ import org.sonarsource.plugins.mybatis.rules.MyBatisLintRulesDefinition;
  */
 public class MyBatisPlugin implements Plugin {
     public static final String STMTID_EXCLUDE_KEY = "sonar.mybatis.stmtid.exclude";
+    public static final String SONAR_MYBATIS_SKIP = "sonar.mybatis.skip";
     private static final String MYBATIS_CATEGORY = "MyBatis";
     private static final String GENERAL_SUBCATEGORY = "General";
 
@@ -38,6 +39,13 @@ public class MyBatisPlugin implements Plugin {
                 .category(MYBATIS_CATEGORY)
                 .onQualifiers(Qualifiers.PROJECT)
                 .multiValues(true)
+                .build());
+        context.addExtension(PropertyDefinition.builder(SONAR_MYBATIS_SKIP)
+                .name("Sonar MyBatis Skip")
+                .defaultValue("false")
+                .subCategory(GENERAL_SUBCATEGORY)
+                .category(MYBATIS_CATEGORY)
+                .onQualifiers(Qualifiers.PROJECT)
                 .build());
     }
 }
