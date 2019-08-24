@@ -129,15 +129,7 @@ public class MyBatisLintSensor implements Sensor {
         parseStatement(stmts, mybatisMapperMap);
 
         // clean reduced.xml
-        for (File file : reducedFileList) {
-            if (file.exists() && file.isFile()) {
-                try {
-                    Files.delete(Paths.get(new URI(file.getAbsolutePath())));
-                } catch (IOException | URISyntaxException e) {
-                    LOGGER.warn(e.toString());
-                }
-            }
-        }
+        cleanFiles(reducedFileList);
     }
 
     private void parseStatement(Set<MappedStatement> stmts, Map mybatisMapperMap) {
@@ -193,6 +185,18 @@ public class MyBatisLintSensor implements Sensor {
             }
         }
 
+    }
+
+    private void cleanFiles(List<File> files) {
+        for (File file : files) {
+            if (file.exists() && file.isFile()) {
+                try {
+                    Files.delete(Paths.get(new URI(file.getAbsolutePath())));
+                } catch (IOException | URISyntaxException e) {
+                    LOGGER.warn(e.toString());
+                }
+            }
+        }
     }
 
     private Integer getLineNumber(String filePath, String stmtIdTail, String sqlCmdType) {
