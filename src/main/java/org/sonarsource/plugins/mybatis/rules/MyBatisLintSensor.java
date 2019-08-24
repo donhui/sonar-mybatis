@@ -2,6 +2,10 @@ package org.sonarsource.plugins.mybatis.rules;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 
 import org.apache.commons.lang.StringUtils;
@@ -64,8 +68,12 @@ public class MyBatisLintSensor implements Sensor {
     @Override
     public void execute(final SensorContext context) {
         this.context = context;
-        Boolean sonarMyBatisSkip = config.getBoolean(SONAR_MYBATIS_SKIP).get();
-        if(sonarMyBatisSkip){
+        Boolean sonarMyBatisSkipBooleanValue = Boolean.valueOf(false);
+        Optional<Boolean> sonarMyBatisSkipValue = config.getBoolean(SONAR_MYBATIS_SKIP);
+        if (sonarMyBatisSkipValue.isPresent()) {
+            sonarMyBatisSkipBooleanValue = sonarMyBatisSkipValue.get();
+        }
+        if (Boolean.TRUE.equals(sonarMyBatisSkipBooleanValue)) {
             LOGGER.info("MyBatis sensor is skiped.");
             return;
         }
@@ -123,7 +131,11 @@ public class MyBatisLintSensor implements Sensor {
         // clean reduced.xml
         for (File file : reducedFileList) {
             if (file.exists() && file.isFile()) {
-                file.delete();
+                try {
+                    Files.delete(Paths.get(new URI(file.getAbsolutePath())));
+                } catch (IOException | URISyntaxException e) {
+                    LOGGER.warn(e.toString());
+                }
             }
         }
     }
