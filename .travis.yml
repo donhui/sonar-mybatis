@@ -8,4 +8,4 @@ addons:
 
 script:
   - cp travis/settings.xml $HOME/.m2/settings.xml
-  - mvn clean compile sonar:sonar
+  - mvn clean compile sonar:sonar -Dsonar.projectKey=donhui_sonar-mybatis
