@@ -191,7 +191,7 @@ public class MyBatisLintSensor implements Sensor {
         for (File file : files) {
             if (file.exists() && file.isFile()) {
                 try {
-                    Files.delete(Paths.get(new URI(file.getAbsolutePath())));
+                    Files.delete(Paths.get(new URI("file:///" + file.getAbsolutePath())));
                 } catch (IOException | URISyntaxException e) {
                     LOGGER.warn(e.toString());
                 }
