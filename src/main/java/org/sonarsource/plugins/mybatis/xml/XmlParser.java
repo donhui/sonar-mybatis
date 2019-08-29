@@ -1,6 +1,6 @@
 package org.sonarsource.plugins.mybatis.xml;
 
-import com.sun.org.apache.xerces.internal.impl.Constants;
+import org.apache.xerces.impl.Constants;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.io.SAXReader;
