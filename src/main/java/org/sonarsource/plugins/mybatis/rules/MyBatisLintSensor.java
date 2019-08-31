@@ -46,6 +46,8 @@ public class MyBatisLintSensor implements Sensor {
 
     private static final Logger LOGGER = Loggers.get(MyBatisLintSensor.class);
 
+    private static final String LEFT_SLASH = "/";
+
     protected final Configuration config;
     protected final FileSystem fileSystem;
     protected SensorContext context;
@@ -107,14 +109,14 @@ public class MyBatisLintSensor implements Sensor {
                 if ("mapper".equals(rootElement.getName()) && publicIdOfDocType.contains("mybatis.org")) {
                     LOGGER.info("handle mybatis mapper xml:" + xmlFilePath);
                     // handle mybatis mapper file
-                    String dstXmlFilePath = xmlFilePath + "-reduced.xml";
-                    File dstXmlFile = new File(dstXmlFilePath);
-                    reducedFileList.add(dstXmlFile);
+                    String reducedXmlFilePath = xmlFilePath + "-reduced.xml";
+                    File reducedXmlFile = new File(reducedXmlFilePath);
+                    reducedFileList.add(reducedXmlFile);
                     MyBatisMapperXmlHandler myBatisMapperXmlHandler = new MyBatisMapperXmlHandler();
-                    myBatisMapperXmlHandler.handleMapperFile(xmlFile, dstXmlFile);
-                    mybatisMapperMap.put(dstXmlFilePath, xmlFilePath);
+                    myBatisMapperXmlHandler.handleMapperFile(xmlFile, reducedXmlFile);
+                    mybatisMapperMap.put(reducedXmlFilePath, xmlFilePath);
                     // xmlMapperBuilder parse mapper resource
-                    Resource mapperResource = new FileSystemResource(dstXmlFile);
+                    Resource mapperResource = new FileSystemResource(reducedXmlFile);
                     XMLMapperBuilder xmlMapperBuilder = new XMLMapperBuilder(mapperResource.getInputStream(),
                         mybatisConfiguration, mapperResource.toString(), mybatisConfiguration.getSqlFragments());
                     xmlMapperBuilder.parse();
@@ -158,9 +160,16 @@ public class MyBatisLintSensor implements Sensor {
                             sql = sql.replaceAll("\\n", "");
                             sql = sql.replaceAll("\\s{2,}", " ");
                             String mapperResource = stmt.getResource();
-                            String dstMapperFilePath =
+                            String reducedXmlFilePath =
                                 mapperResource.substring(mapperResource.indexOf('[') + 1, mapperResource.indexOf(']'));
-                            String sourceMapperFilePath = (String)mybatisMapperMap.get(dstMapperFilePath);
+
+                            // windows environment
+                            if(!reducedXmlFilePath.startsWith(LEFT_SLASH)){
+                                reducedXmlFilePath = LEFT_SLASH + reducedXmlFilePath.replace("\\", LEFT_SLASH);
+                            }
+                            LOGGER.debug("reducedMapperFilePath: " + reducedXmlFilePath);
+
+                            String sourceMapperFilePath = (String)mybatisMapperMap.get(reducedXmlFilePath);
 
                             LOGGER.info("id=" + stmtId + ",");
                             LOGGER.info("sql=" + sql);
@@ -174,6 +183,7 @@ public class MyBatisLintSensor implements Sensor {
 
                                 String sqlCmdType = stmt.getSqlCommandType().toString().toLowerCase();
 
+                                LOGGER.debug("sourceMapperFilePath: " + sourceMapperFilePath);
                                 Integer lineNumber = getLineNumber(sourceMapperFilePath, stmtIdTail, sqlCmdType);
 
                                 // match Rule And Save Issue
@@ -191,7 +201,7 @@ public class MyBatisLintSensor implements Sensor {
         for (File file : files) {
             if (file.exists() && file.isFile()) {
                 try {
-                    Files.delete(Paths.get(new URI("file:///" + file.getAbsolutePath())));
+                    Files.delete(Paths.get(new URI("file:///" + file.getAbsolutePath().replace("\\",LEFT_SLASH))));
                 } catch (IOException | URISyntaxException e) {
                     LOGGER.warn(e.toString());
                 }
