@@ -46,6 +46,8 @@ public class MyBatisLintSensor implements Sensor {
 
     private static final Logger LOGGER = Loggers.get(MyBatisLintSensor.class);
 
+    private static final String LEFT_SLASH = "/";
+
     protected final Configuration config;
     protected final FileSystem fileSystem;
     protected SensorContext context;
@@ -162,8 +164,8 @@ public class MyBatisLintSensor implements Sensor {
                                 mapperResource.substring(mapperResource.indexOf('[') + 1, mapperResource.indexOf(']'));
 
                             // windows environment
-                            if(!reducedXmlFilePath.startsWith("/")){
-                                reducedXmlFilePath = "/" + reducedXmlFilePath.replace("\\", "/");
+                            if(!reducedXmlFilePath.startsWith(LEFT_SLASH)){
+                                reducedXmlFilePath = LEFT_SLASH + reducedXmlFilePath.replace("\\", LEFT_SLASH);
                             }
                             LOGGER.debug("reducedMapperFilePath: " + reducedXmlFilePath);
 
@@ -199,7 +201,7 @@ public class MyBatisLintSensor implements Sensor {
         for (File file : files) {
             if (file.exists() && file.isFile()) {
                 try {
-                    Files.delete(Paths.get(new URI("file:///" + file.getAbsolutePath().replace("\\","/"))));
+                    Files.delete(Paths.get(new URI("file:///" + file.getAbsolutePath().replace("\\",LEFT_SLASH))));
                 } catch (IOException | URISyntaxException e) {
                     LOGGER.warn(e.toString());
                 }
