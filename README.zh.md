@@ -59,7 +59,7 @@ mvn clean compile -U -Dmaven.test.skip=true -Dmaven.javadoc.skip=true sonar:sona
 
 ![stmt-id-exclude](images/stmt-id-exclude.png)
 
-## 跳过 MyBatis Sensor
+## 跳过 MyBatis 扫描
 如果有时候想要跳过 MyBatis 扫描，你可以修改全局属性 `sonar.mybatis.skip` 为 `true` 或者在命令行中添加参数：
 `-Dsonar.mybatis.skip=true` 。
 
