@@ -164,7 +164,7 @@ public class MyBatisLintSensor implements Sensor {
                                 mapperResource.substring(mapperResource.indexOf('[') + 1, mapperResource.indexOf(']'));
 
                             // windows environment
-                            if(!reducedXmlFilePath.startsWith(LEFT_SLASH)){
+                            if (!reducedXmlFilePath.startsWith(LEFT_SLASH)) {
                                 reducedXmlFilePath = LEFT_SLASH + reducedXmlFilePath.replace("\\", LEFT_SLASH);
                             }
                             LOGGER.debug("reducedMapperFilePath: " + reducedXmlFilePath);
@@ -201,7 +201,7 @@ public class MyBatisLintSensor implements Sensor {
         for (File file : files) {
             if (file.exists() && file.isFile()) {
                 try {
-                    Files.delete(Paths.get(new URI("file:///" + file.getAbsolutePath().replace("\\",LEFT_SLASH))));
+                    Files.delete(Paths.get(new URI("file:///" + file.getAbsolutePath().replace("\\", LEFT_SLASH))));
                 } catch (IOException | URISyntaxException e) {
                     LOGGER.warn(e.toString());
                 }
@@ -250,6 +250,14 @@ public class MyBatisLintSensor implements Sensor {
                 // Where condition not found in select statement
                 errorMessage = "Where condition not found in select statement";
                 ruleId = "MyBatisMapperCheckRule4";
+            }
+        }
+
+        if (sql.startsWith("select") && sql.contains("*")) {
+            sql = sql.replace(" ", "");
+            if (!sql.contains("count(*)")) {
+                errorMessage = "select statement should not include *";
+                ruleId = "MyBatisMapperCheckRule7";
             }
         }
 

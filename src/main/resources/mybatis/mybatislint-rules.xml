@@ -97,9 +97,23 @@
         <status>READY</status>
         <type>BUG</type>
         <tag>mybatis</tag>
-        <tag>mybatis</tag>
         <tag>delete</tag>
         <remediationFunction>LINEAR</remediationFunction>
         <remediationFunctionGapMultiplier>20min</remediationFunctionGapMultiplier>
+    </rule>
+    <rule>
+        <key>MyBatisMapperCheckRule7</key>
+        <name>select statement should not include *</name>
+        <internalKey>MyBatisMapperCheckRule7</internalKey>
+        <description>select statement should not include *, it is not a bad practice, suggest using specific fields.
+        </description>
+        <severity>MINOR</severity>
+        <cardinality>SINGLE</cardinality>
+        <status>READY</status>
+        <type>BUG</type>
+        <tag>mybatis</tag>
+        <tag>select</tag>
+        <remediationFunction>LINEAR</remediationFunction>
+        <remediationFunctionGapMultiplier>10min</remediationFunctionGapMultiplier>
     </rule>
 </mybatislint-rules>
