@@ -49,7 +49,7 @@
     </rule>
     <rule>
         <key>MyBatisMapperCheckRule4</key>
-        <name>Where condition not found in select statement</name>
+        <name>where condition not found in select statement</name>
         <internalKey>MyBatisMapperCheckRule4</internalKey>
         <description>If all parameters in the update statement of Mapper XML file are null,
             the sql will not have where condition, then it will select all records from the table, which may lead to
@@ -67,7 +67,7 @@
     </rule>
     <rule>
         <key>MyBatisMapperCheckRule5</key>
-        <name>Where condition not found in update statement</name>
+        <name>where condition not found in update statement</name>
         <internalKey>MyBatisMapperCheckRule5</internalKey>
         <description>If all parameters in the update statement of Mapper XML file are null,
             the sql will not have where condition, then it will update all records from the table, which will result
@@ -85,7 +85,7 @@
     </rule>
     <rule>
         <key>MyBatisMapperCheckRule6</key>
-        <name>Where condition not found in delete statement</name>
+        <name>where condition not found in delete statement</name>
         <internalKey>MyBatisMapperCheckRule6</internalKey>
         <description>If all parameters in the delete statement of Mapper XML file are null,
             the sql will not have where condition, then it will delete all records from the table, which will result
@@ -97,9 +97,23 @@
         <status>READY</status>
         <type>BUG</type>
         <tag>mybatis</tag>
-        <tag>mybatis</tag>
         <tag>delete</tag>
         <remediationFunction>LINEAR</remediationFunction>
         <remediationFunctionGapMultiplier>20min</remediationFunctionGapMultiplier>
+    </rule>
+    <rule>
+        <key>MyBatisMapperCheckRule7</key>
+        <name>select statement should not include *</name>
+        <internalKey>MyBatisMapperCheckRule7</internalKey>
+        <description>select statement should not include *, it is not a bad practice, suggest using specific fields.
+        </description>
+        <severity>MINOR</severity>
+        <cardinality>SINGLE</cardinality>
+        <status>READY</status>
+        <type>BUG</type>
+        <tag>mybatis</tag>
+        <tag>select</tag>
+        <remediationFunction>LINEAR</remediationFunction>
+        <remediationFunctionGapMultiplier>10min</remediationFunctionGapMultiplier>
     </rule>
 </mybatislint-rules>
