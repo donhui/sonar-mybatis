@@ -47,6 +47,13 @@ public class MyBatisLintSensor implements Sensor {
     private static final Logger LOGGER = Loggers.get(MyBatisLintSensor.class);
 
     private static final String LEFT_SLASH = "/";
+    private static final String SELECT = "select";
+    private static final String UPDATE = "update";
+    private static final String DELETE = "delete";
+    private static final String WHERE = "where";
+    private static final String COUNT_STAR ="count(*)";
+    private static final String STAR ="*";
+
 
     protected final Configuration config;
     protected final FileSystem fileSystem;
@@ -224,38 +231,38 @@ public class MyBatisLintSensor implements Sensor {
         String errorMessage = "";
         String ruleId = "";
         if (containsOneEqualsOne(sql)) {
-            if (sql.startsWith("delete")) {
+            if (sql.startsWith(DELETE)) {
                 // delete statement contains 1=1
                 errorMessage = "delete statement should not include 1=1";
                 ruleId = "MyBatisMapperCheckRule3";
-            } else if (sql.startsWith("update")) {
+            } else if (sql.startsWith(UPDATE)) {
                 // update statement contains 1=1
                 errorMessage = "update statement should not include 1=1";
                 ruleId = "MyBatisMapperCheckRule2";
-            } else if (sql.startsWith("select") && !containsFunctionOrLimit(sql)) {
+            } else if (sql.startsWith(SELECT) && !containsFunctionOrLimit(sql)) {
                 // select statement contains 1=1
                 errorMessage = "select statement should not include 1=1";
                 ruleId = "MyBatisMapperCheckRule1";
             }
-        } else if (!sql.contains("where")) {
-            if (sql.startsWith("delete")) {
+        } else if (!sql.contains(WHERE)) {
+            if (sql.startsWith(DELETE)) {
                 // Where condition not found in delete statement
                 errorMessage = "Where condition not found in delete statement";
                 ruleId = "MyBatisMapperCheckRule6";
-            } else if (sql.startsWith("update")) {
+            } else if (sql.startsWith(UPDATE)) {
                 // Where condition not found in update statement
                 errorMessage = "Where condition not found in update statement";
                 ruleId = "MyBatisMapperCheckRule5";
-            } else if (sql.startsWith("select") && !containsFunctionOrLimit(sql)) {
+            } else if (sql.startsWith(SELECT) && !containsFunctionOrLimit(sql)) {
                 // Where condition not found in select statement
                 errorMessage = "Where condition not found in select statement";
                 ruleId = "MyBatisMapperCheckRule4";
             }
         }
 
-        if (sql.startsWith("select") && sql.contains("*")) {
+        if (sql.startsWith(SELECT) && sql.contains(STAR)) {
             sql = sql.replace(" ", "");
-            if (!sql.contains("count(*)")) {
+            if (!sql.contains(COUNT_STAR)) {
                 errorMessage = "select statement should not include *";
                 ruleId = "MyBatisMapperCheckRule7";
             }
