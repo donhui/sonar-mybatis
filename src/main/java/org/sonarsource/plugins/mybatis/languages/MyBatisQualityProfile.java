@@ -35,7 +35,7 @@ public final class MyBatisQualityProfile implements BuiltInQualityProfilesDefini
         rule6.overrideSeverity(Severity.CRITICAL);
 
         NewBuiltInActiveRule rule7 = profile.activateRule(REPO_KEY, "MyBatisMapperCheckRule7");
-        rule6.overrideSeverity(Severity.MINOR);
+        rule7.overrideSeverity(Severity.MINOR);
 
         profile.done();
     }
