@@ -26,7 +26,7 @@ WHERE 1=1
 ```
 
 ## MyBatis Rules
-There are 6 built-in mybatis rules, which select, update and delete statement has two rules.
+There are 7 built-in mybatis rules, which select statement has three rules, update and delete statement has two rules.
 
 ![mybatis-rules](images/mybatis-rules.png)
 

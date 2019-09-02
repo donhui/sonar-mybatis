@@ -24,7 +24,7 @@ WHERE 1=1
 ```
 
 ## MyBatis 规则
-有6个内置的规则，select、update 以及 delete 语句分别有2个规则。
+有7个内置的规则，select语句有3个规则，update 以及 delete 语句分别有2个规则。
 
 ![mybatis-rules](images/mybatis-rules.png)
 
