@@ -42,6 +42,12 @@ public class MyBatisMapperXmlHandler {
                     }
                 }
             }
+            // handle TypeHandler,javaType,jdbcType
+            String text = element.getText();
+            text = text.replaceAll(",[\\s]*typeHandler=[.*A-Za-z0-9_=,]*}","}");
+            text = text.replaceAll(",[\\s]*javaType=[.A-Za-z0-9_=,]*}","}");
+            text = text.replaceAll(",[\\s]*jdbcType=[.A-Za-z0-9_=,]*}","}");
+            element.setText(text);
         }
 
         // handle `test` attribute of `if` or `when` element
