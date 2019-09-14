@@ -42,11 +42,12 @@ public class MyBatisMapperXmlHandler {
                     }
                 }
             }
-            // handle TypeHandler,javaType,jdbcType
+            // handle TypeHandler,javaType,jdbcType,resultMap
             String text = element.getText();
             text = text.replaceAll(",[\\s]*typeHandler=[.*A-Za-z0-9_=,]*}","}");
             text = text.replaceAll(",[\\s]*javaType=[.A-Za-z0-9_=,]*}","}");
             text = text.replaceAll(",[\\s]*jdbcType=[.A-Za-z0-9_=,]*}","}");
+            text = text.replaceAll(",[\\s]*resultMap=[.A-Za-z0-9_=,]*}","}");
             element.setText(text);
         }
 
