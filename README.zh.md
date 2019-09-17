@@ -3,6 +3,8 @@
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/donhui/sonar-mybatis)](https://github.com/donhui/sonar-mybatis/releases/)
 [![GitHub All Releases](https://img.shields.io/github/downloads/donhui/sonar-mybatis/total)](https://github.com/donhui/sonar-mybatis/releases/)
 
+[README 英文版](README.md)
+
 ## SonarQube MyBatis 插件
 MyBatis SonarQube Plugin ：自定义规则用于检查 MyBatis Mapper XML 文件中的风险 SQL。
 
