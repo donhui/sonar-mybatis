@@ -31,6 +31,10 @@
     <issueManagement>
         <url>https://github.com/donhui/sonar-mybatis/issues</url>
     </issueManagement>
+    <ciManagement>
+        <system>Travis CI</system>
+        <url>https://travis-ci.com/donhui/sonar-mybatis</url>
+    </ciManagement>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
