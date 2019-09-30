@@ -6,7 +6,7 @@
     <groupId>org.sonarsource.plugins.mybatis</groupId>
     <artifactId>sonar-mybatis-plugin</artifactId>
     <packaging>sonar-plugin</packaging>
-    <version>1.0.5-SNAPSHOT</version>
+    <version>1.0.5</version>
 
     <name>MyBatis Plugin for SonarQube</name>
     <description>Rules to check SQL statements in MyBatis Mapper XML files</description>
@@ -21,7 +21,7 @@
         <developer>
             <id>donhui</id>
             <name>donghui</name>
-            <email>977675308@nqq.com</email>
+            <email>977675308@qq.com</email>
             <url>https://github.com/donhui</url>
         </developer>
     </developers>
@@ -31,6 +31,10 @@
     <issueManagement>
         <url>https://github.com/donhui/sonar-mybatis/issues</url>
     </issueManagement>
+    <ciManagement>
+        <system>Travis CI</system>
+        <url>https://travis-ci.com/donhui/sonar-mybatis</url>
+    </ciManagement>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -56,7 +60,7 @@
         <dependency>
             <groupId>org.mybatis</groupId>
             <artifactId>mybatis</artifactId>
-            <version>3.5.1</version>
+            <version>3.5.2</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>

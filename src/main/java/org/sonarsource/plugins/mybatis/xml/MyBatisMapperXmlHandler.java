@@ -14,13 +14,14 @@ import org.dom4j.io.XMLWriter;
 
 public class MyBatisMapperXmlHandler {
 
-    private void handleMapperElement(Document document){
+    private void handleMapperElement(Document document) {
         Element root = document.getRootElement();
         // iterate through child elements of root
         List<Element> elementList = root.elements();
         for (Element element : elementList) {
-            if ("resultMap".equals(element.getName())) {
-                // remove resultMap element
+            if ("resultMap".equals(element.getName()) || "parameterMap".equals(element.getName())
+                || "cache".equals(element.getName()) || "cache-ref".equals(element.getName())) {
+                // remove resultMap,parameterMap,cache,cache-ref element
                 root.remove(element);
             } else {
                 // handle attributes
@@ -30,7 +31,7 @@ public class MyBatisMapperXmlHandler {
                     for (Attribute attribute : attributeList) {
                         // generate toRemoveAttributeList
                         if ("parameterType".equals(attribute.getName()) || "resultMap".equals(attribute.getName())
-                            || "resultType".equals(attribute.getName())) {
+                            || "resultType".equals(attribute.getName()) || "parameterMap".equals(attribute.getName())) {
                             toRemoveAttributeList.add(attribute);
                         }
                     }
@@ -41,13 +42,21 @@ public class MyBatisMapperXmlHandler {
                         element.remove(attribute);
                     }
                 }
+                // handle selectKey child element
+                List<Element> childElementList = element.elements();
+                for(Element childElement : childElementList){
+                    if("selectKey".equals(childElement.getName())) {
+                        element.remove(childElement);
+                    }
+                }
+
             }
             // handle TypeHandler,javaType,jdbcType,resultMap
             String text = element.getText();
-            text = text.replaceAll(",[\\s]*typeHandler=[.*A-Za-z0-9_=,]*}","}");
-            text = text.replaceAll(",[\\s]*javaType=[.A-Za-z0-9_=,]*}","}");
-            text = text.replaceAll(",[\\s]*jdbcType=[.A-Za-z0-9_=,]*}","}");
-            text = text.replaceAll(",[\\s]*resultMap=[.A-Za-z0-9_=,]*}","}");
+            text = text.replaceAll(",[\\s]*typeHandler=[.*A-Za-z0-9_=,]*}", "}");
+            text = text.replaceAll(",[\\s]*javaType=[.A-Za-z0-9_=,]*}", "}");
+            text = text.replaceAll(",[\\s]*jdbcType=[.A-Za-z0-9_=,]*}", "}");
+            text = text.replaceAll(",[\\s]*resultMap=[.A-Za-z0-9_=,]*}", "}");
             element.setText(text);
         }
 
