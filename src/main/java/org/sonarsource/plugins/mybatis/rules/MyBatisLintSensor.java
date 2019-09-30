@@ -1,12 +1,23 @@
 package org.sonarsource.plugins.mybatis.rules;
 
+import static org.sonarsource.plugins.mybatis.MyBatisPlugin.SONAR_MYBATIS_SKIP;
+import static org.sonarsource.plugins.mybatis.MyBatisPlugin.STMTID_EXCLUDE_KEY;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.ibatis.builder.xml.XMLMapperBuilder;
@@ -36,9 +47,6 @@ import org.sonarsource.plugins.mybatis.xml.XmlParser;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
-import static org.sonarsource.plugins.mybatis.MyBatisPlugin.SONAR_MYBATIS_SKIP;
-import static org.sonarsource.plugins.mybatis.MyBatisPlugin.STMTID_EXCLUDE_KEY;
-
 /**
  * The goal of this Sensor is analysis mybatis mapper files and generate issues.
  */
@@ -51,9 +59,8 @@ public class MyBatisLintSensor implements Sensor {
     private static final String UPDATE = "update";
     private static final String DELETE = "delete";
     private static final String WHERE = "where";
-    private static final String COUNT_STAR ="count(*)";
-    private static final String STAR ="*";
-
+    private static final String COUNT_STAR = "count(*)";
+    private static final String STAR = "*";
 
     protected final Configuration config;
     protected final FileSystem fileSystem;
@@ -166,9 +173,9 @@ public class MyBatisLintSensor implements Sensor {
                         if (!StringUtils.endsWith(stmtId, "!selectKey")) {
                             sql = sql.replaceAll("\\n", "");
                             sql = sql.replaceAll("\\s{2,}", " ");
-                            String mapperResource = stmt.getResource();
-                            String reducedXmlFilePath =
-                                mapperResource.substring(mapperResource.indexOf('[') + 1, mapperResource.indexOf(']'));
+                            final String mapperResource = stmt.getResource();
+                            String reducedXmlFilePath = mapperResource.substring(mapperResource.indexOf('[') + 1,
+                                    mapperResource.indexOf(']'));
 
                             // windows environment
                             if (!reducedXmlFilePath.startsWith(LEFT_SLASH)) {
@@ -176,23 +183,21 @@ public class MyBatisLintSensor implements Sensor {
                             }
                             LOGGER.debug("reducedMapperFilePath: " + reducedXmlFilePath);
 
-                            String sourceMapperFilePath = (String)mybatisMapperMap.get(reducedXmlFilePath);
+                            final String sourceMapperFilePath = (String) mybatisMapperMap.get(reducedXmlFilePath);
 
-                            LOGGER.info("id=" + stmtId + ",");
+                            LOGGER.info("stmtId=" + stmtId);
                             LOGGER.info("sql=" + sql);
 
                             if (stmtIdExcludeList.contains(stmtId)) {
                                 LOGGER.info("stmt id exclude:" + stmtId);
                             } else {
                                 // get lineNumber by mapper file and keyWord
-                                String[] stmtIdSplit = stmtId.split("\\.");
-                                String stmtIdTail = stmtIdSplit[stmtIdSplit.length - 1];
-
-                                String sqlCmdType = stmt.getSqlCommandType().toString().toLowerCase();
-
-                                LOGGER.debug("sourceMapperFilePath: " + sourceMapperFilePath);
-                                Integer lineNumber = getLineNumber(sourceMapperFilePath, stmtIdTail, sqlCmdType);
-
+                                final String[] stmtIdSplit = stmtId.split("\\.");
+                                final String stmtIdTail = stmtIdSplit[stmtIdSplit.length - 1];
+                                final String sqlCmdType = stmt.getSqlCommandType().toString().toLowerCase();
+                                LOGGER.debug("sourceMapperFilePath: " + sourceMapperFilePath + " stmtIdTail:  "
+                                        + stmtIdTail + " sqlCmdType: " + sqlCmdType);
+                                final int lineNumber = getLineNumber(sourceMapperFilePath, stmtIdTail, sqlCmdType);
                                 // match Rule And Save Issue
                                 matchRuleAndSaveIssue(sql, sourceMapperFilePath, lineNumber);
                             }
@@ -216,14 +221,8 @@ public class MyBatisLintSensor implements Sensor {
         }
     }
 
-    private Integer getLineNumber(String filePath, String stmtIdTail, String sqlCmdType) {
-        String keyWordWithSingleQuot = stmtIdTail + "\'";
-        Integer lineNumber = IOUtils.getLineNumber(filePath, keyWordWithSingleQuot, sqlCmdType);
-        if (null == lineNumber) {
-            String keyWordWithDoubleQuot = stmtIdTail + "\"";
-            lineNumber = IOUtils.getLineNumber(filePath, keyWordWithDoubleQuot, sqlCmdType);
-        }
-        return lineNumber;
+    private int getLineNumber(final String filePath, final String stmtIdTail, final String sqlCmdType) {
+        return IOUtils.getLineNumber(filePath, stmtIdTail, sqlCmdType);
     }
 
     private void matchRuleAndSaveIssue(String sql, String sourceMapperFilePath, Integer lineNumber) {
@@ -269,8 +268,10 @@ public class MyBatisLintSensor implements Sensor {
         }
 
         if (!"".equals(ruleId)) {
-            ErrorDataFromLinter mybatisError =
-                new ErrorDataFromLinter(ruleId, errorMessage, sourceMapperFilePath, lineNumber);
+            LOGGER.debug("ruleId=" + ruleId + " errorMessage=" + errorMessage + " filePath=" + sourceMapperFilePath + " line="
+                    + lineNumber);
+            ErrorDataFromLinter mybatisError = new ErrorDataFromLinter(ruleId, errorMessage, sourceMapperFilePath,
+                    lineNumber);
             getResourceAndSaveIssue(mybatisError);
         }
     }
@@ -302,7 +303,7 @@ public class MyBatisLintSensor implements Sensor {
     private void saveIssue(final InputFile inputFile, int line, final String externalRuleKey, final String message) {
         RuleKey ruleKey = RuleKey.of(getRepositoryKeyForLanguage(), externalRuleKey);
 
-        NewIssue newIssue = context.newIssue().forRule(ruleKey);
+        NewIssue newIssue = context.newIssue().forRule(ruleKey).gap(2.0);
 
         NewIssueLocation primaryLocation = newIssue.newLocation().on(inputFile).message(message);
         if (line > 0) {
@@ -320,52 +321,6 @@ public class MyBatisLintSensor implements Sensor {
     @Override
     public String toString() {
         return "MyBatisLintSensor";
-    }
-
-    private static class ErrorDataFromLinter {
-
-        private final String externalRuleId;
-        private final String issueMessage;
-        private final String filePath;
-        private final int line;
-
-        public ErrorDataFromLinter(final String externalRuleId, final String issueMessage, final String filePath,
-            final int line) {
-            this.externalRuleId = externalRuleId;
-            this.issueMessage = issueMessage;
-            this.filePath = filePath;
-            this.line = line;
-        }
-
-        public String getType() {
-            return externalRuleId;
-        }
-
-        public String getDescription() {
-            return issueMessage;
-        }
-
-        public String getFilePath() {
-            return filePath;
-        }
-
-        public int getLine() {
-            return line;
-        }
-
-        @Override
-        public String toString() {
-            StringBuilder s = new StringBuilder();
-            s.append(externalRuleId);
-            s.append("|");
-            s.append(issueMessage);
-            s.append("|");
-            s.append(filePath);
-            s.append("(");
-            s.append(line);
-            s.append(")");
-            return s.toString();
-        }
     }
 
 }
