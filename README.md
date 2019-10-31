@@ -70,3 +70,6 @@ Please report bugs and feature requests at https://github.com/donhui/sonar-mybat
 
 Or you can submit pull requests for fix bugs or create new features, any contribution is welcome.
 
+# Stargazers over time
+
+[![Stargazers over time](https://starchart.cc/donhui/sonar-mybatis.svg)](https://starchart.cc/donhui/sonar-mybatis)

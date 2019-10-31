@@ -70,3 +70,6 @@ mvn clean compile -U -Dmaven.test.skip=true -Dmaven.javadoc.skip=true sonar:sona
 
 或者可以提交 pull requests 用于修复 bug 或提交新功能，欢迎任何形式的贡献。
 
+# Star 趋势图
+
+[![Stargazers over time](https://starchart.cc/donhui/sonar-mybatis.svg)](https://starchart.cc/donhui/sonar-mybatis)
