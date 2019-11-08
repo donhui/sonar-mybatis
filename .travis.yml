@@ -2,4 +2,4 @@ language: java
 
 script:
   - cp travis/settings.xml $HOME/.m2/settings.xml
-  - mvn clean compile sonar:sonar -Dsonar.projectKey=donhui_sonar-mybatis -Dsonar.host.url=https://sonarcloud.io/ -Dsonar.login=6943068b8011272d514d550d075a76e94ebcb4d7
+  - mvn clean compile sonar:sonar -Dsonar.organization=donhui -Dsonar.projectKey=donhui_sonar-mybatis -Dsonar.host.url=https://sonarcloud.io/ -Dsonar.login=6943068b8011272d514d550d075a76e94ebcb4d7
