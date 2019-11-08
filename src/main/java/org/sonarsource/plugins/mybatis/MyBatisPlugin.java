@@ -3,8 +3,6 @@ package org.sonarsource.plugins.mybatis;
 import org.sonar.api.Plugin;
 import org.sonar.api.config.PropertyDefinition;
 import org.sonar.api.resources.Qualifiers;
-import org.sonarsource.plugins.mybatis.hooks.DisplayIssuesInScanner;
-import org.sonarsource.plugins.mybatis.hooks.DisplayQualityGateStatus;
 import org.sonarsource.plugins.mybatis.languages.MyBatisQualityProfile;
 import org.sonarsource.plugins.mybatis.rules.MyBatisLintSensor;
 import org.sonarsource.plugins.mybatis.rules.MyBatisLintRulesDefinition;
@@ -18,12 +16,8 @@ public class MyBatisPlugin implements Plugin {
     private static final String MYBATIS_CATEGORY = "MyBatis";
     private static final String GENERAL_SUBCATEGORY = "General";
 
-
     @Override
     public void define(Context context) {
-        // hooks
-        // http://docs.sonarqube.org/display/DEV/Adding+Hooks
-        context.addExtensions(DisplayIssuesInScanner.class, DisplayQualityGateStatus.class);
 
         // qualityprofile
         context.addExtension(MyBatisQualityProfile.class);
@@ -32,20 +26,11 @@ public class MyBatisPlugin implements Plugin {
         context.addExtensions(MyBatisLintRulesDefinition.class, MyBatisLintSensor.class);
 
         // property
-        context.addExtension(PropertyDefinition.builder(STMTID_EXCLUDE_KEY)
-                .name("Statement ID Exclude")
-                .description("Comma-separated list of statement id exclude.")
-                .subCategory(GENERAL_SUBCATEGORY)
-                .category(MYBATIS_CATEGORY)
-                .onQualifiers(Qualifiers.PROJECT)
-                .multiValues(true)
-                .build());
-        context.addExtension(PropertyDefinition.builder(SONAR_MYBATIS_SKIP)
-                .name("Sonar MyBatis Skip")
-                .defaultValue("false")
-                .subCategory(GENERAL_SUBCATEGORY)
-                .category(MYBATIS_CATEGORY)
-                .onQualifiers(Qualifiers.PROJECT)
-                .build());
+        context.addExtension(PropertyDefinition.builder(STMTID_EXCLUDE_KEY).name("Statement ID Exclude")
+            .description("Comma-separated list of statement id exclude.").subCategory(GENERAL_SUBCATEGORY)
+            .category(MYBATIS_CATEGORY).onQualifiers(Qualifiers.PROJECT).multiValues(true).build());
+        context.addExtension(
+            PropertyDefinition.builder(SONAR_MYBATIS_SKIP).name("Sonar MyBatis Skip").defaultValue("false")
+                .subCategory(GENERAL_SUBCATEGORY).category(MYBATIS_CATEGORY).onQualifiers(Qualifiers.PROJECT).build());
     }
 }
