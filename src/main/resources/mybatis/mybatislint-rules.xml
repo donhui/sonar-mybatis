@@ -54,7 +54,7 @@
         <description>If all parameters in the update statement of Mapper XML file are null,
             the sql will not have where condition, then it will select all records from the table, which may lead to
             performance issues. Suggest using simple parameters instead of elements (such as:
-            if,choose,when,otherwise,trim,where,set,foeeach elemnt etc.) for required parameters.
+            if,choose,when,otherwise,trim,where,set,foreach elemnt etc.) for required parameters.
         </description>
         <severity>MINOR</severity>
         <cardinality>SINGLE</cardinality>
@@ -72,7 +72,7 @@
         <description>If all parameters in the update statement of Mapper XML file are null,
             the sql will not have where condition, then it will update all records from the table, which will result
             production accident. Suggest using simple parameters instead of elements (such as:
-            if,choose,when,otherwise,trim,where,set,foeeach elemnt etc.) for required parameters.
+            if,choose,when,otherwise,trim,where,set,foreach elemnt etc.) for required parameters.
         </description>
         <severity>MAJOR</severity>
         <cardinality>SINGLE</cardinality>
@@ -90,7 +90,7 @@
         <description>If all parameters in the delete statement of Mapper XML file are null,
             the sql will not have where condition, then it will delete all records from the table, which will result
             production accident. Suggest using simple parameters instead of elements (such as:
-            if,choose,when,otherwise,trim,where,set,foeeach elemnt etc.) for required parameters.
+            if,choose,when,otherwise,trim,where,set,foreach elemnt etc.) for required parameters.
         </description>
         <severity>CRITICAL</severity>
         <cardinality>SINGLE</cardinality>
