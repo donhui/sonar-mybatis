@@ -2,7 +2,6 @@
 [![SonarCloud Status](https://sonarcloud.io/api/project_badges/measure?project=donhui_sonar-mybatis&metric=alert_status)](https://sonarcloud.io/dashboard?id=donhui_sonar-mybatis)
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/donhui/sonar-mybatis)](https://github.com/donhui/sonar-mybatis/releases/)
 [![GitHub All Releases](https://img.shields.io/github/downloads/donhui/sonar-mybatis/total)](https://github.com/donhui/sonar-mybatis/releases/)
-[![HitCount](http://hits.dwyl.com/donhui/sonar-mybatis.svg)](http://hits.dwyl.com/donhui/sonar-mybatis)
 
 [README 中文版](README.zh.md)
 
