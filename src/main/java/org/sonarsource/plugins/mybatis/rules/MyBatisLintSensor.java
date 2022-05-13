@@ -41,6 +41,7 @@ import org.sonar.api.rule.RuleKey;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
 import org.sonar.plugins.xml.Xml;
+import org.sonarsource.plugins.mybatis.Constant;
 import org.sonarsource.plugins.mybatis.utils.IOUtils;
 import org.sonarsource.plugins.mybatis.xml.MyBatisMapperXmlHandler;
 import org.sonarsource.plugins.mybatis.xml.XmlParser;
@@ -233,29 +234,29 @@ public class MyBatisLintSensor implements Sensor {
             if (sql.startsWith(DELETE)) {
                 // delete statement contains 1=1
                 errorMessage = "delete statement should not include 1=1";
-                ruleId = "MyBatisMapperCheckRule3";
+                ruleId = Constant.MYBATIS_MAPPER_CHECK_RULE_03;
             } else if (sql.startsWith(UPDATE)) {
                 // update statement contains 1=1
                 errorMessage = "update statement should not include 1=1";
-                ruleId = "MyBatisMapperCheckRule2";
+                ruleId = Constant.MYBATIS_MAPPER_CHECK_RULE_02;
             } else if (sql.startsWith(SELECT) && !containsFunctionOrLimit(sql)) {
                 // select statement contains 1=1
                 errorMessage = "select statement should not include 1=1";
-                ruleId = "MyBatisMapperCheckRule1";
+                ruleId = Constant.MYBATIS_MAPPER_CHECK_RULE_01;
             }
         } else if (!sql.contains(WHERE)) {
             if (sql.startsWith(DELETE)) {
                 // Where condition not found in delete statement
                 errorMessage = "where condition not found in delete statement";
-                ruleId = "MyBatisMapperCheckRule6";
+                ruleId = Constant.MYBATIS_MAPPER_CHECK_RULE_06;
             } else if (sql.startsWith(UPDATE)) {
                 // Where condition not found in update statement
                 errorMessage = "where condition not found in update statement";
-                ruleId = "MyBatisMapperCheckRule5";
+                ruleId = Constant.MYBATIS_MAPPER_CHECK_RULE_05;
             } else if (sql.startsWith(SELECT) && !containsFunctionOrLimit(sql)) {
                 // Where condition not found in select statement
                 errorMessage = "where condition not found in select statement";
-                ruleId = "MyBatisMapperCheckRule4";
+                ruleId = Constant.MYBATIS_MAPPER_CHECK_RULE_04;
             }
         }
 
@@ -263,7 +264,7 @@ public class MyBatisLintSensor implements Sensor {
             sql = sql.replace(" ", "");
             if (!sql.contains(COUNT_STAR)) {
                 errorMessage = "select statement should not include *";
-                ruleId = "MyBatisMapperCheckRule7";
+                ruleId = Constant.MYBATIS_MAPPER_CHECK_RULE_07;
             }
         }
 

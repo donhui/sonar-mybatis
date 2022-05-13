@@ -1,27 +1,25 @@
 package org.sonarsource.plugins.mybatis.rules;
 
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 
 import org.sonar.api.rule.RuleKey;
 import org.sonar.api.rule.Severity;
 import org.sonar.api.rules.RuleType;
 import org.sonar.api.server.rule.RulesDefinition;
-import org.sonar.api.server.rule.RulesDefinitionXmlLoader;
 import org.sonar.plugins.xml.Xml;
+import org.sonarsource.plugins.mybatis.Constant;
 
 public final class MyBatisLintRulesDefinition implements RulesDefinition {
 
     public static final String REPO_KEY = "MyBatisLint";
     protected static final String REPO_NAME = REPO_KEY;
 
-    public static final RuleKey MYBATIS_MAPPER_CHECK_RULE_01 = RuleKey.of(REPO_KEY, "MyBatisMapperCheckRule01");
-    public static final RuleKey MYBATIS_MAPPER_CHECK_RULE_02 = RuleKey.of(REPO_KEY, "MyBatisMapperCheckRule02");
-    public static final RuleKey MYBATIS_MAPPER_CHECK_RULE_03 = RuleKey.of(REPO_KEY, "MyBatisMapperCheckRule03");
-    public static final RuleKey MYBATIS_MAPPER_CHECK_RULE_04 = RuleKey.of(REPO_KEY, "MyBatisMapperCheckRule04");
-    public static final RuleKey MYBATIS_MAPPER_CHECK_RULE_05 = RuleKey.of(REPO_KEY, "MyBatisMapperCheckRule05");
-    public static final RuleKey MYBATIS_MAPPER_CHECK_RULE_06 = RuleKey.of(REPO_KEY, "MyBatisMapperCheckRule06");
-    public static final RuleKey MYBATIS_MAPPER_CHECK_RULE_07 = RuleKey.of(REPO_KEY, "MyBatisMapperCheckRule07");
+    public static final RuleKey MYBATIS_MAPPER_CHECK_RULE_01 = RuleKey.of(REPO_KEY, Constant.MYBATIS_MAPPER_CHECK_RULE_01);
+    public static final RuleKey MYBATIS_MAPPER_CHECK_RULE_02 = RuleKey.of(REPO_KEY, Constant.MYBATIS_MAPPER_CHECK_RULE_02);
+    public static final RuleKey MYBATIS_MAPPER_CHECK_RULE_03 = RuleKey.of(REPO_KEY, Constant.MYBATIS_MAPPER_CHECK_RULE_03);
+    public static final RuleKey MYBATIS_MAPPER_CHECK_RULE_04 = RuleKey.of(REPO_KEY, Constant.MYBATIS_MAPPER_CHECK_RULE_04);
+    public static final RuleKey MYBATIS_MAPPER_CHECK_RULE_05 = RuleKey.of(REPO_KEY, Constant.MYBATIS_MAPPER_CHECK_RULE_05);
+    public static final RuleKey MYBATIS_MAPPER_CHECK_RULE_06 = RuleKey.of(REPO_KEY, Constant.MYBATIS_MAPPER_CHECK_RULE_06);
+    public static final RuleKey MYBATIS_MAPPER_CHECK_RULE_07 = RuleKey.of(REPO_KEY, Constant.MYBATIS_MAPPER_CHECK_RULE_07);
 
 
     @Override

@@ -3,6 +3,7 @@ package org.sonarsource.plugins.mybatis.languages;
 import org.sonar.api.rule.Severity;
 import org.sonar.api.server.profile.BuiltInQualityProfilesDefinition;
 import org.sonar.plugins.xml.Xml;
+import org.sonarsource.plugins.mybatis.Constant;
 
 import static org.sonarsource.plugins.mybatis.rules.MyBatisLintRulesDefinition.REPO_KEY;
 
@@ -16,26 +17,26 @@ public final class MyBatisQualityProfile implements BuiltInQualityProfilesDefini
         NewBuiltInQualityProfile profile = context.createBuiltInQualityProfile("MyBatisLint Rules", Xml.KEY);
         profile.setDefault(true);
 
-        NewBuiltInActiveRule rule1 = profile.activateRule(REPO_KEY, "MyBatisMapperCheckRule01");
-        rule1.overrideSeverity(Severity.MINOR);
+        NewBuiltInActiveRule rule01 = profile.activateRule(REPO_KEY, Constant.MYBATIS_MAPPER_CHECK_RULE_01);
+        rule01.overrideSeverity(Severity.MINOR);
 
-        NewBuiltInActiveRule rule2 = profile.activateRule(REPO_KEY, "MyBatisMapperCheckRule02");
-        rule2.overrideSeverity(Severity.MAJOR);
+        NewBuiltInActiveRule rule02 = profile.activateRule(REPO_KEY, Constant.MYBATIS_MAPPER_CHECK_RULE_02);
+        rule02.overrideSeverity(Severity.MAJOR);
 
-        NewBuiltInActiveRule rule3 = profile.activateRule(REPO_KEY, "MyBatisMapperCheckRule03");
-        rule3.overrideSeverity(Severity.CRITICAL);
+        NewBuiltInActiveRule rule03 = profile.activateRule(REPO_KEY, Constant.MYBATIS_MAPPER_CHECK_RULE_03);
+        rule03.overrideSeverity(Severity.CRITICAL);
 
-        NewBuiltInActiveRule rule4 = profile.activateRule(REPO_KEY, "MyBatisMapperCheckRule04");
-        rule4.overrideSeverity(Severity.MINOR);
+        NewBuiltInActiveRule rule04 = profile.activateRule(REPO_KEY, Constant.MYBATIS_MAPPER_CHECK_RULE_04);
+        rule04.overrideSeverity(Severity.MINOR);
 
-        NewBuiltInActiveRule rule5 = profile.activateRule(REPO_KEY, "MyBatisMapperCheckRule05");
-        rule5.overrideSeverity(Severity.MAJOR);
+        NewBuiltInActiveRule rule05 = profile.activateRule(REPO_KEY, Constant.MYBATIS_MAPPER_CHECK_RULE_05);
+        rule05.overrideSeverity(Severity.MAJOR);
 
-        NewBuiltInActiveRule rule6 = profile.activateRule(REPO_KEY, "MyBatisMapperCheckRule06");
-        rule6.overrideSeverity(Severity.CRITICAL);
+        NewBuiltInActiveRule rule06 = profile.activateRule(REPO_KEY, Constant.MYBATIS_MAPPER_CHECK_RULE_06);
+        rule06.overrideSeverity(Severity.CRITICAL);
 
-        NewBuiltInActiveRule rule7 = profile.activateRule(REPO_KEY, "MyBatisMapperCheckRule07");
-        rule7.overrideSeverity(Severity.MINOR);
+        NewBuiltInActiveRule rule07 = profile.activateRule(REPO_KEY, Constant.MYBATIS_MAPPER_CHECK_RULE_07);
+        rule07.overrideSeverity(Severity.MINOR);
 
         profile.done();
     }
