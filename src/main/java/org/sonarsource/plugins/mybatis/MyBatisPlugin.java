@@ -1,6 +1,7 @@
 package org.sonarsource.plugins.mybatis;
 
 import org.sonar.api.Plugin;
+import org.sonar.api.PropertyType;
 import org.sonar.api.config.PropertyDefinition;
 import org.sonar.api.resources.Qualifiers;
 import org.sonarsource.plugins.mybatis.languages.MyBatisQualityProfile;
@@ -21,7 +22,8 @@ public class MyBatisPlugin implements Plugin {
 
         // qualityprofile
         context.addExtension(MyBatisQualityProfile.class);
-
+        context.addExtension(PropertyDefinition.builder(Constants.PLUGIN_SQL_DIALECT).name("SQL dialect")
+                .description("SQL dialect for analysis").defaultValue("tsql").type(PropertyType.STRING).build());
         // rules
         context.addExtensions(MyBatisLintRulesDefinition.class, MyBatisLintSensor.class);
 

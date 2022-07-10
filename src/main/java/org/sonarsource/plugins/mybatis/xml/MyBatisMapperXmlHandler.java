@@ -1,8 +1,7 @@
 package org.sonarsource.plugins.mybatis.xml;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import org.dom4j.Attribute;
@@ -79,14 +78,14 @@ public class MyBatisMapperXmlHandler {
         }
     }
 
-    public void handleMapperFile(File sourceFile, File dstFile) throws DocumentException, IOException {
+    public void handleMapperFile(InputStream sourceFile, OutputStream dstInputStream) throws DocumentException, IOException {
         XmlParser xmlParser = new XmlParser();
         Document document = xmlParser.parse(sourceFile);
         Element root = document.getRootElement();
         if ("mapper".equals(root.getName())) {
             handleMapperElement(document);
             OutputFormat format = OutputFormat.createPrettyPrint();
-            XMLWriter writer = new XMLWriter(new FileOutputStream(dstFile), format);
+            XMLWriter writer = new XMLWriter(dstInputStream, format);
             writer.write(document);
             writer.close();
         }

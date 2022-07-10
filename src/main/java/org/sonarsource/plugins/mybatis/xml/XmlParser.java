@@ -9,11 +9,12 @@ import org.sonar.api.utils.log.Loggers;
 import org.xml.sax.SAXException;
 
 import java.io.File;
+import java.io.InputStream;
 
 public class XmlParser {
     private static final Logger LOGGER = Loggers.get(XmlParser.class);
 
-    public Document parse(File file) throws DocumentException {
+    public Document parse(InputStream in) throws DocumentException {
         SAXReader reader = new SAXReader();
         reader.setValidation(false);
         try {
@@ -21,6 +22,6 @@ public class XmlParser {
         } catch (SAXException e) {
             LOGGER.warn(e.toString());
         }
-        return reader.read(file);
+        return reader.read(in);
     }
 }

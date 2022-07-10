@@ -1,9 +1,6 @@
 package org.sonarsource.plugins.mybatis.utils;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.LineNumberReader;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 
 import org.sonar.api.utils.log.Logger;
@@ -25,14 +22,13 @@ public class IOUtils {
      * @param sqlCmdType
      * @return
      */
-    public static int getLineNumber(final String filePath, final String stmtId, final String sqlCmdType) {
+    public static int getLineNumber(final InputStream fileStream, final String stmtId, final String sqlCmdType) {
         int lineNumber = 1;// numero mayor a cero en caso que "no se llame"
         final String sqlCmdTypeAux = "<" + sqlCmdType;
         final String stmtIdAuxDoublequote = stmtId + "\"";
-        final String stmtIdAuxSimplequote = stmtId + "\'";
-        LOGGER.debug("filePath: " + filePath + " stmtId: " + stmtId + " sqlCmdType: " + sqlCmdType);
+        final String stmtIdAuxSimplequote = stmtId + "'";
         try (LineNumberReader lineNumberReader = new LineNumberReader(
-                new InputStreamReader(new FileInputStream(filePath), StandardCharsets.UTF_8))) {
+                new InputStreamReader(fileStream, StandardCharsets.UTF_8))) {
             String readLine = null;
             while ((readLine = lineNumberReader.readLine()) != null) {
                 // check if contains
