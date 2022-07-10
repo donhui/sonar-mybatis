@@ -29,7 +29,7 @@ public class IssuesFillerTest {
         IssuesFiller filler = new IssuesFiller();
 
         AntlrContext antlrContext = Dialects.TSQL
-                .parse("SELECT * From facts.test where name = 4;");
+                .parse("update dbo.test set name = null  where 1 > 0 ;;");
 
         PrettyPrinter.print(antlrContext.root, 0, antlrContext.stream);
 

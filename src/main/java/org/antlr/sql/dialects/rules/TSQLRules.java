@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.antlr.sql.dialects.Dialects;
 import org.antlr.sql.dialects.psql.PostgreSQLParser.Func_nameContext;
+import org.antlr.sql.dialects.tsql.TSqlParser;
 import org.antlr.sql.dialects.tsql.TSqlParser.AsteriskContext;
 import org.antlr.sql.dialects.tsql.TSqlParser.Column_name_listContext;
 import org.antlr.sql.dialects.tsql.TSqlParser.Comparison_operatorContext;
@@ -56,7 +57,8 @@ public enum TSQLRules {
                     .addAll(Arrays.asList(getWaitForRule(), getSelectAllRule(), getInsertRule(), getOrderByRule(),
                             getExecRule(), getNoLockRule(), getSargRule(), getPKRule(), getFKRule(),
                             getNullComparisonRule(), getIndexNamingRule(), getWhereWithOrVsUnionRule(),
-                            getUnionVsUnionALLRule(), getExistsVsInRule(), getOrderByRuleWithoutAscDesc()
+                            getUnionVsUnionALLRule(), getExistsVsInRule(), getOrderByRuleWithoutAscDesc(),
+                            getNumberEqualsRule()
 
                     ));
             rules.add(customRules);
@@ -451,5 +453,37 @@ public enum TSQLRules {
 
         return rule;
     }
+    private Rule getNumberEqualsRule() {
+        Rule r = baseRules.getNumberEqualsRule();
 
+        RuleImplementation rImpl = r.getRuleImplementation();
+        rImpl.getNames().getTextItem().add(Search_conditionContext.class.getSimpleName());
+        rImpl.setRuleMatchType(RuleMatchType.CLASS_ONLY);
+
+        RuleImplementation child = new RuleImplementation();
+        child.getTextToFind().getTextItem().add("=");
+        child.getTextToFind().getTextItem().add("!=");
+        child.getTextToFind().getTextItem().add("<>");
+        child.getTextToFind().getTextItem().add(">");
+        child.getTextToFind().getTextItem().add(">=");
+        child.getTextToFind().getTextItem().add("<=");
+        child.getTextToFind().getTextItem().add("<");
+        child.setTextCheckType(TextCheckType.STRICT);
+        child.setRuleMatchType(RuleMatchType.TEXT_AND_CLASS);
+        child.setRuleResultType(RuleResultType.SKIP_IF_NOT_FOUND);
+        child.getNames().getTextItem().add(Comparison_operatorContext.class.getSimpleName());
+
+
+        RuleImplementation childNumber = new RuleImplementation();
+        childNumber.getTextToFind().getTextItem().add("^\\d*$");
+        childNumber.setTextCheckType(TextCheckType.REGEXP);
+        childNumber.setRuleMatchType(RuleMatchType.TEXT_AND_CLASS);
+        childNumber.setRuleResultType(RuleResultType.FAIL_IF_MORE_FOUND);
+        childNumber.setTimes(1);
+        childNumber.getNames().getTextItem().add(ConstantContext.class.getSimpleName());
+
+        rImpl.getChildrenRules().getRuleImplementation().add(childNumber);
+        rImpl.getChildrenRules().getRuleImplementation().add(child);
+        return  r;
+    }
 }

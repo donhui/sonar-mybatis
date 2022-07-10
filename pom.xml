@@ -6,7 +6,7 @@
     <groupId>org.sonarsource.plugins.mybatis</groupId>
     <artifactId>sonar-mybatis-plugin</artifactId>
     <packaging>sonar-plugin</packaging>
-    <version>1.0.7</version>
+    <version>1.0.8</version>
 
     <name>MyBatis Plugin for SonarQube</name>
     <description>Rules to check SQL statements in MyBatis Mapper XML files</description>
@@ -39,7 +39,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <sonar.apiVersion>8.9.2.46101</sonar.apiVersion>
-        <jdk.min.version>1.9</jdk.min.version>
+        <jdk.min.version>1.8</jdk.min.version>
         <sonar.sources>src/main/java,src/main/resources</sonar.sources>
     </properties>
 

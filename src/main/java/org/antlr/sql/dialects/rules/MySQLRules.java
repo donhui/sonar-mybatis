@@ -46,7 +46,8 @@ public enum MySQLRules {
 			customRules.getRule()
 					.addAll(Arrays.asList(getWaitForRule(), getSelectAllRule(), getInsertRule(), getOrderByRule(),
 							getSargRule(), getNullComparisonRule(), getWhereWithOrVsUnionRule(),
-							getUnionVsUnionALLRule(), getExistsVsInRule(), getOrderByRuleWithoutAscDesc()));
+							getUnionVsUnionALLRule(), getExistsVsInRule(), getOrderByRuleWithoutAscDesc(),
+							getNumberEqualsRule()));
 			rules.add(customRules);
 		}
 		return rules;
@@ -300,4 +301,37 @@ public enum MySQLRules {
 		return rule;
 	}
 
+	private Rule getNumberEqualsRule() {
+		Rule r = baseRules.getNumberEqualsRule();
+
+		RuleImplementation rImpl = r.getRuleImplementation();
+		rImpl.getNames().getTextItem().add(PredicateExpressionContext.class.getSimpleName());
+		rImpl.setRuleMatchType(RuleMatchType.CLASS_ONLY);
+
+		RuleImplementation child = new RuleImplementation();
+		child.getTextToFind().getTextItem().add("=");
+		child.getTextToFind().getTextItem().add("!=");
+		child.getTextToFind().getTextItem().add("<>");
+		child.getTextToFind().getTextItem().add(">");
+		child.getTextToFind().getTextItem().add(">=");
+		child.getTextToFind().getTextItem().add("<=");
+		child.getTextToFind().getTextItem().add("<");
+		child.setTextCheckType(TextCheckType.STRICT);
+		child.setRuleMatchType(RuleMatchType.TEXT_AND_CLASS);
+		child.setRuleResultType(RuleResultType.SKIP_IF_NOT_FOUND);
+		child.getNames().getTextItem().add(ComparisonOperatorContext.class.getSimpleName());
+
+
+		RuleImplementation childNumber = new RuleImplementation();
+		childNumber.getTextToFind().getTextItem().add("^\\d*$");
+		childNumber.setTextCheckType(TextCheckType.REGEXP);
+		childNumber.setRuleMatchType(RuleMatchType.TEXT_AND_CLASS);
+		childNumber.setRuleResultType(RuleResultType.FAIL_IF_MORE_FOUND);
+		childNumber.setTimes(1);
+		childNumber.getNames().getTextItem().add(ConstantContext.class.getSimpleName());
+
+		rImpl.getChildrenRules().getRuleImplementation().add(childNumber);
+		rImpl.getChildrenRules().getRuleImplementation().add(child);
+		return r;
+	}
 }

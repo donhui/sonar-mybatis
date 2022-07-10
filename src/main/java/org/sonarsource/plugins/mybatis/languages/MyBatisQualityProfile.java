@@ -1,9 +1,15 @@
 package org.sonarsource.plugins.mybatis.languages;
 
+import org.antlr.sql.dialects.SQLDialectRules;
 import org.sonar.api.rule.Severity;
 import org.sonar.api.server.profile.BuiltInQualityProfilesDefinition;
 import org.sonar.plugins.xml.Xml;
 import org.sonarsource.plugins.mybatis.Constant;
+import org.sonarsource.plugins.mybatis.Constants;
+import org.sonarsource.plugins.mybatis.rules.Rule;
+import org.sonarsource.plugins.mybatis.rules.SqlRules;
+
+import java.util.List;
 
 import static org.sonarsource.plugins.mybatis.rules.MyBatisLintRulesDefinition.REPO_KEY;
 
@@ -14,30 +20,15 @@ public final class MyBatisQualityProfile implements BuiltInQualityProfilesDefini
 
     @Override
     public void define(Context context) {
-        NewBuiltInQualityProfile profile = context.createBuiltInQualityProfile("MyBatisLint Rules", Xml.KEY);
-        profile.setDefault(true);
+        final NewBuiltInQualityProfile profile = context.createBuiltInQualityProfile("SQL rules", Constants.languageKey)
+                .setDefault(true);
+        final List<SqlRules> rules = SQLDialectRules.INSTANCE.getGroupedRules();
 
-        NewBuiltInActiveRule rule01 = profile.activateRule(REPO_KEY, Constant.MYBATIS_MAPPER_CHECK_RULE_01);
-        rule01.overrideSeverity(Severity.MINOR);
-
-        NewBuiltInActiveRule rule02 = profile.activateRule(REPO_KEY, Constant.MYBATIS_MAPPER_CHECK_RULE_02);
-        rule02.overrideSeverity(Severity.MAJOR);
-
-        NewBuiltInActiveRule rule03 = profile.activateRule(REPO_KEY, Constant.MYBATIS_MAPPER_CHECK_RULE_03);
-        rule03.overrideSeverity(Severity.CRITICAL);
-
-        NewBuiltInActiveRule rule04 = profile.activateRule(REPO_KEY, Constant.MYBATIS_MAPPER_CHECK_RULE_04);
-        rule04.overrideSeverity(Severity.MINOR);
-
-        NewBuiltInActiveRule rule05 = profile.activateRule(REPO_KEY, Constant.MYBATIS_MAPPER_CHECK_RULE_05);
-        rule05.overrideSeverity(Severity.MAJOR);
-
-        NewBuiltInActiveRule rule06 = profile.activateRule(REPO_KEY, Constant.MYBATIS_MAPPER_CHECK_RULE_06);
-        rule06.overrideSeverity(Severity.CRITICAL);
-
-        NewBuiltInActiveRule rule07 = profile.activateRule(REPO_KEY, Constant.MYBATIS_MAPPER_CHECK_RULE_07);
-        rule07.overrideSeverity(Severity.MINOR);
-
+        for (SqlRules sqlRules : rules) {
+            for (Rule rule : sqlRules.getRule()) {
+                profile.activateRule(sqlRules.getRepoKey(), rule.getKey());
+            }
+        }
         profile.done();
     }
 

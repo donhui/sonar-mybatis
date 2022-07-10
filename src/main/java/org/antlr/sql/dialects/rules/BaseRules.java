@@ -1,8 +1,10 @@
 package org.antlr.sql.dialects.rules;
 
+import org.antlr.sql.dialects.tsql.TSqlParser;
 import org.antlr.sql.dialects.tsql.TSqlParser.Declare_statementContext;
 import org.antlr.sql.dialects.tsql.TSqlParser.Primitive_expressionContext;
 import org.antlr.sql.dialects.tsql.TSqlParser.Set_statementContext;
+import org.sonar.api.rules.RuleType;
 import org.sonarsource.plugins.mybatis.rules.*;
 
 
@@ -23,9 +25,10 @@ public enum BaseRules implements IBaseRules {
 		rule.setName("SLEEP/WAITFOR is used.");
 		rule.setDescription("SLEEP/WAITFOR is used");
 		rule.setTag("performance");
-		rule.setSeverity("MINOR");
+		rule.setSeverity("MAJOR");
 		rule.setRemediationFunction("LINEAR");
 		rule.setDebtRemediationFunctionCoefficient("2min");
+		rule.setRuleType("BUG");
 		rule.getRuleImplementation().setRuleViolationMessage("WAIT/SLEEP is used");
 
 		return rule;
@@ -44,10 +47,10 @@ public enum BaseRules implements IBaseRules {
 		rule.setName("SELECT * is used");
 		rule.setDescription("<h2>Description</h2><p>SELECT * is used. Please list names.</p>");
 		rule.setTag("design");
-		rule.setSeverity("MINOR");
+		rule.setSeverity("MAJOR");
 		rule.setRemediationFunction("LINEAR");
 		rule.setDebtRemediationFunctionCoefficient("2min");
-
+		rule.setRuleType("BUG");
 		RuleImplementation impl = new RuleImplementation();
 		impl.getViolatingRulesCodeExamples().getRuleCodeExample()
 				.add("SELECT t1.*, t2.* from dbo.test as t1 inner join dbo.test2 as t2 on t1.id=t2.id;");
@@ -77,7 +80,7 @@ public enum BaseRules implements IBaseRules {
 		rule.setSeverity("MINOR");
 		rule.setRemediationFunction("LINEAR");
 		rule.setDebtRemediationFunctionCoefficient("2min");
-
+		rule.setRuleType("BUG");
 		RuleImplementation impl = new RuleImplementation();
 		impl.setRuleViolationMessage("Column list is not specified in an INSERT statement.");
 		impl.getViolatingRulesCodeExamples().getRuleCodeExample().add("INSERT INTO dbo.test VALUES (1,2);\r\nINSERT INTO dbo.test2 VALUES (1,2);");
@@ -160,7 +163,7 @@ public enum BaseRules implements IBaseRules {
 		rule.setName("Non schema qualified object name");
 		rule.setDescription(
 				"<h2>Description</h2><p>Always use schema-qualified object names to speed up resolution and improve query plan reuse.</p>");
-
+		rule.setRuleType("BUG");
 		RuleImplementation impl = new RuleImplementation();
 		impl.setRuleViolationMessage("Always use schema-qualified object names");
 		impl.getViolatingRulesCodeExamples().getRuleCodeExample().add("SELECT * from test order by 1;");
@@ -333,7 +336,7 @@ public enum BaseRules implements IBaseRules {
 		rule.setRemediationFunction("LINEAR");
 		rule.setDebtRemediationFunctionCoefficient("3min");
 		rule.setRuleImplementation(ruleImpl);
-
+		rule.setRuleType("BUG");
 		return rule;
 	}
 
@@ -451,7 +454,7 @@ public enum BaseRules implements IBaseRules {
 		r.setRemediationFunction("LINEAR");
 		r.setDebtRemediationFunctionCoefficient("3min");
 		r.setName("UNION operator is used");
-
+		r.setRuleType("BUG");
 		RuleImplementation rImpl = new RuleImplementation();
 		rImpl.setRuleViolationMessage(
 				"Consider using UNION ALL instead of UNION operator for the performance reasons.");
@@ -482,7 +485,7 @@ public enum BaseRules implements IBaseRules {
 		rule.setRemediationFunction("LINEAR");
 		rule.setDebtRemediationFunctionCoefficient("5min");
 		rule.setName("IN/NOT IN is used for a subquery");
-
+		rule.setRuleType("BUG");
 		RuleImplementation ruleImplementation = rule.getRuleImplementation();
 		ruleImplementation
 				.setRuleViolationMessage("Consider using EXISTS/NOT EXISTS instead of IN/NOT IN in a clause.");
@@ -638,4 +641,39 @@ public enum BaseRules implements IBaseRules {
 		return r;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see org.antlr.sql.dialects.rules.IBaseRules#getDeclareRule()
+	 */
+	@Override
+	public Rule getNumberEqualsRule() {
+		Rule r = new Rule();
+		r.setKey("C019");
+		r.setInternalKey("C019");
+		r.setDescription(
+				"<h2>Description</h2><p>select/update/delete statement should not include 1=1, it is a useless code and bad practice, suggest removing it.</p>");
+		r.setSeverity("MINOR");
+		r.setTag("mybatis");
+		r.setRemediationFunction("LINEAR");
+		r.setDebtRemediationFunctionCoefficient("3min");
+		r.setName("select/update/delete statement should not include 1=1");
+
+		r.getRuleImplementation().getCompliantRulesCodeExamples().getRuleCodeExample()
+				.add("update dbo.test set name = null  where name < 0;");
+		r.getRuleImplementation().getCompliantRulesCodeExamples().getRuleCodeExample()
+				.add("delete dbo.test where name  > 2;");
+		r.getRuleImplementation().getCompliantRulesCodeExamples().getRuleCodeExample()
+				.add("SELECT * from dbo.test where name = 1;");
+		r.getRuleImplementation().getViolatingRulesCodeExamples().getRuleCodeExample()
+				.add("update dbo.test set name = null  where 1 > 0 ;");
+		r.getRuleImplementation().getViolatingRulesCodeExamples().getRuleCodeExample()
+				.add("delete dbo.test where 1 = 1;");
+		r.getRuleImplementation().getViolatingRulesCodeExamples().getRuleCodeExample()
+				.add("SELECT * from dbo.test where 1 = 2;");
+		r.getRuleImplementation()
+				.setRuleViolationMessage("select/update/delete statement should not include 1=1");
+		r.setRuleType("BUG");
+		return r;
+	}
 }

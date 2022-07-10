@@ -45,8 +45,6 @@
       AND ui2.id = #{userId}
     </if>
     ORDER BY naacl.status,naacl.create_time DESC
-
-
   </select>
 
   <delete id="delere">

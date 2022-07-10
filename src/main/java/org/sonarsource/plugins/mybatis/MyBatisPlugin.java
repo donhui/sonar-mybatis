@@ -25,7 +25,7 @@ public class MyBatisPlugin implements Plugin {
         context.addExtension(PropertyDefinition.builder(Constants.PLUGIN_SQL_DIALECT).name("SQL dialect")
                 .description("SQL dialect for analysis").defaultValue("tsql").type(PropertyType.STRING).build());
         // rules
-        context.addExtensions(MyBatisLintRulesDefinition.class, MyBatisLintSensor.class);
+        context.addExtensions(MybatisRulesDefinition.class, MyBatisLintSensor.class);
 
         // property
         context.addExtension(PropertyDefinition.builder(STMTID_EXCLUDE_KEY).name("Statement ID Exclude")

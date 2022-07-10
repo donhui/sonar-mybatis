@@ -51,12 +51,6 @@ public class MyBatisLintSensor extends BaseSensor implements Sensor {
     private static final Logger LOGGER = Loggers.get(MyBatisLintSensor.class);
 
     private static final String LEFT_SLASH = "/";
-    private static final String SELECT = "select";
-    private static final String UPDATE = "update";
-    private static final String DELETE = "delete";
-    private static final String WHERE = "where";
-    private static final String COUNT_STAR = "count(*)";
-    private static final String STAR = "*";
 
     protected SensorContext context;
     private List<String> stmtIdExcludeList = new ArrayList<>();
@@ -207,99 +201,6 @@ public class MyBatisLintSensor extends BaseSensor implements Sensor {
 
     private int getLineNumber(final InputStream fileStream, final String stmtIdTail, final String sqlCmdType) {
         return IOUtils.getLineNumber(fileStream, stmtIdTail, sqlCmdType);
-    }
-
-    private void matchRuleAndSaveIssue(String sql, String sourceMapperFilePath, Integer lineNumber) {
-        sql = sql.toLowerCase();
-        String errorMessage = "";
-        String ruleId = "";
-        if (containsOneEqualsOne(sql)) {
-            if (sql.startsWith(DELETE)) {
-                // delete statement contains 1=1
-                errorMessage = "delete statement should not include 1=1";
-                ruleId = Constant.MYBATIS_MAPPER_CHECK_RULE_03;
-            } else if (sql.startsWith(UPDATE)) {
-                // update statement contains 1=1
-                errorMessage = "update statement should not include 1=1";
-                ruleId = Constant.MYBATIS_MAPPER_CHECK_RULE_02;
-            } else if (sql.startsWith(SELECT) && !containsFunctionOrLimit(sql)) {
-                // select statement contains 1=1
-                errorMessage = "select statement should not include 1=1";
-                ruleId = Constant.MYBATIS_MAPPER_CHECK_RULE_01;
-            }
-        } else if (!sql.contains(WHERE)) {
-            if (sql.startsWith(DELETE)) {
-                // Where condition not found in delete statement
-                errorMessage = "where condition not found in delete statement";
-                ruleId = Constant.MYBATIS_MAPPER_CHECK_RULE_06;
-            } else if (sql.startsWith(UPDATE)) {
-                // Where condition not found in update statement
-                errorMessage = "where condition not found in update statement";
-                ruleId = Constant.MYBATIS_MAPPER_CHECK_RULE_05;
-            } else if (sql.startsWith(SELECT) && !containsFunctionOrLimit(sql)) {
-                // Where condition not found in select statement
-                errorMessage = "where condition not found in select statement";
-                ruleId = Constant.MYBATIS_MAPPER_CHECK_RULE_04;
-            }
-        }
-
-        if (sql.startsWith(SELECT) && sql.contains(STAR)) {
-            sql = sql.replace(" ", "");
-            if (!sql.contains(COUNT_STAR)) {
-                errorMessage = "select statement should not include *";
-                ruleId = Constant.MYBATIS_MAPPER_CHECK_RULE_07;
-            }
-        }
-
-        if (!"".equals(ruleId)) {
-            LOGGER.debug("ruleId=" + ruleId + " errorMessage=" + errorMessage + " filePath=" + sourceMapperFilePath + " line="
-                    + lineNumber);
-            ErrorDataFromLinter mybatisError = new ErrorDataFromLinter(ruleId, errorMessage, sourceMapperFilePath,
-                    lineNumber);
-            getResourceAndSaveIssue(mybatisError);
-        }
-    }
-
-    private boolean containsOneEqualsOne(String sql) {
-        return sql.contains("1=1") || sql.contains("1 = 1") || sql.contains("1= 1") || sql.contains("1 =1");
-    }
-
-    private boolean containsFunctionOrLimit(String sql) {
-        return sql.contains("sum(") || sql.contains("count(") || sql.contains("max(") || sql.contains("min(")
-            || sql.contains("limit");
-    }
-
-    private void getResourceAndSaveIssue(final ErrorDataFromLinter error) {
-        LOGGER.debug(error.toString());
-
-        final FileSystem fs = context.fileSystem();
-        final InputFile inputFile = fs.inputFile(fs.predicates().hasAbsolutePath(error.getFilePath()));
-
-        LOGGER.debug("inputFile null ? " + (inputFile == null));
-
-        if (inputFile != null) {
-            saveIssue(inputFile, error.getLine(), error.getType(), error.getDescription());
-        } else {
-            LOGGER.error("Not able to find a InputFile with " + error.getFilePath());
-        }
-    }
-
-    private void saveIssue(final InputFile inputFile, int line, final String externalRuleKey, final String message) {
-        RuleKey ruleKey = RuleKey.of(getRepositoryKeyForLanguage(), externalRuleKey);
-
-        NewIssue newIssue = context.newIssue().forRule(ruleKey).gap(2.0);
-
-        NewIssueLocation primaryLocation = newIssue.newLocation().on(inputFile).message(message);
-        if (line > 0) {
-            primaryLocation.at(inputFile.selectLine(line));
-        }
-        newIssue.at(primaryLocation);
-
-        newIssue.save();
-    }
-
-    private static String getRepositoryKeyForLanguage() {
-        return MyBatisLintRulesDefinition.REPO_KEY;
     }
 
     @Override
