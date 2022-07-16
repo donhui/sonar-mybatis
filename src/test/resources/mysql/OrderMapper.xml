@@ -1,66 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.grpc_demo.mapper.OrderMapper">
-  <resultMap id="BaseResultMap" type="com.example.grpc_demo.model.Order">
-    <!--@mbg.generated-->
-    <!--@Table t_order-->
-    <id column="order_id" jdbcType="VARCHAR" property="orderId" />
-    <result column="order_name" jdbcType="VARCHAR" property="orderName" />
-    <result column="is_deleted" jdbcType="BIT" property="isDeleted" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    <!--@mbg.generated-->
-    order_id, order_name, is_deleted, create_time, update_time
-  </sql>
+<mapper namespace="cn.cc.cc.cc.vo">
 
 
-  <select id="size" resultType="java.lang.Integer">
-    SELECT naacl.*,
-    ui1.user_name AS 'a',
-    ui2.user_name AS 'b',
-    ui3.user_name AS 'c',
-    ui4.user_name AS 'd',
-    ui5.user_name AS 'e',
-    org.org_name AS 'f'
-    FROM a naacl
-    LEFT JOIN v ui1 ON ui1.id = naacl.apply_user_id
-    LEFT JOIN c ui2 ON ui2.id = naacl.create_user_id
-    LEFT JOIN d ui3 ON ui3.id = naacl.audit_user_id
-    LEFT JOIN e ui4 ON ui4.id = naacl.approve_user_id
-    LEFT JOIN f ui5 ON ui5.id = naacl.execute_user_id
-    LEFT JOIN g org ON org.org_id = naacl.department_id
-    WHERE naacl.deleted = 0
-    <if test="applyUserName != null and applyUserName != ''">
-      AND ui1.user_name LIKE concat('%',#{applyUserName},'%')
-    </if>
-    <if test="departmentName != null and departmentName != ''">
-      AND org.org_name LIKE concat('%',#{departmentName},'%')
-    </if>
-    <if test="departmentId != null and departmentId != ''">
-      AND naacl.department_id = #{departmentId}
-    </if>
-    <if test="userId != null and userId != ''">
-      AND ui2.id = #{userId}
-    </if>
-    ORDER BY naacl.status,naacl.create_time DESC
+  <select id="getlist" resultType="com.tul.manage.agenterp.vo.respose.PhoneOrdersMaterialVo">
+    SELECT DISTINCT
+      number,
+       name,
+      unit
+    FROM axxx
+      where 1 = 1
+    order by FMtrNumber
   </select>
 
-  <delete id="delere">
-    SELECT t1.*, t2.* from dbo.test as t1 inner join dbo.test2 as t2 on t1.id=t2.id;
-  </delete>
-
-  <update id="update">
-    select * from t_order
-  </update>
-  <update id="update1">
-    select order_id, order_name, is_deleted, create_time, update_time from t_order  where a*b = 2;
-  </update>
-  <update id="update2">
-    select order_id*order_name, is_deleted, create_time, update_time from t_order ;
-  </update>
-  <update id="update3">
-    select o.* from t_order as o;
-  </update>
 </mapper>

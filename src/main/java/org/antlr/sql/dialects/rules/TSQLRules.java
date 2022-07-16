@@ -457,7 +457,7 @@ public enum TSQLRules {
         Rule r = baseRules.getNumberEqualsRule();
 
         RuleImplementation rImpl = r.getRuleImplementation();
-        rImpl.getNames().getTextItem().add(Search_conditionContext.class.getSimpleName());
+        rImpl.getNames().getTextItem().add(PredicateContext.class.getSimpleName());
         rImpl.setRuleMatchType(RuleMatchType.CLASS_ONLY);
 
         RuleImplementation child = new RuleImplementation();
@@ -480,7 +480,12 @@ public enum TSQLRules {
         childNumber.setRuleMatchType(RuleMatchType.TEXT_AND_CLASS);
         childNumber.setRuleResultType(RuleResultType.FAIL_IF_MORE_FOUND);
         childNumber.setTimes(1);
-        childNumber.getNames().getTextItem().add(ConstantContext.class.getSimpleName());
+        childNumber.setDistance(1);
+        //childNumber.setIndex(1);
+        childNumber.setDistanceCheckType(RuleDistanceIndexMatchType.EQUALS);
+       // childNumber.setIndexCheckType(RuleDistanceIndexMatchType.EQUALS);
+        childNumber.getNames().getTextItem().add(TSqlParser.ExpressionContext.class.getSimpleName());
+
 
         rImpl.getChildrenRules().getRuleImplementation().add(childNumber);
         rImpl.getChildrenRules().getRuleImplementation().add(child);

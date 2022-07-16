@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.antlr.sql.dialects.Dialects;
 import org.antlr.sql.dialects.mysql.MySqlLexer;
+import org.antlr.sql.dialects.mysql.MySqlParser;
 import org.antlr.sql.dialects.mysql.MySqlParser.ComparisonOperatorContext;
 import org.antlr.sql.dialects.mysql.MySqlParser.ConstantContext;
 import org.antlr.sql.dialects.mysql.MySqlParser.FromClauseContext;
@@ -328,7 +329,7 @@ public enum MySQLRules {
 		childNumber.setRuleMatchType(RuleMatchType.TEXT_AND_CLASS);
 		childNumber.setRuleResultType(RuleResultType.FAIL_IF_MORE_FOUND);
 		childNumber.setTimes(1);
-		childNumber.getNames().getTextItem().add(ConstantContext.class.getSimpleName());
+		childNumber.getNames().getTextItem().add(MySqlParser.ExpressionContext.class.getSimpleName());
 
 		rImpl.getChildrenRules().getRuleImplementation().add(childNumber);
 		rImpl.getChildrenRules().getRuleImplementation().add(child);

@@ -88,8 +88,7 @@ public class SqlSourceBuilder extends org.sonarsource.plugins.mybatis.builder.Ba
 
     @Override
     public String handleToken(String content) {
-      parameterMappings.add(buildParameterMapping(content));
-      return "?";
+      return "''";
     }
 
     private ParameterMapping buildParameterMapping(String content) {

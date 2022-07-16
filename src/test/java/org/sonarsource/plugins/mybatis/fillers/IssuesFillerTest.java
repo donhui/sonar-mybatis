@@ -24,18 +24,44 @@ import java.io.IOException;
 public class IssuesFillerTest {
 
     @Test
-    public void testIssues() throws IOException {
+    public void testTSQLIssues() throws IOException {
 
         IssuesFiller filler = new IssuesFiller();
 
         AntlrContext antlrContext = Dialects.TSQL
-                .parse("update dbo.test set name = null  where 1 > 0 ;;");
+                .parse("    SELECT DISTINCT\n" +
+                        "      number,\n" +
+                        "       name,\n" +
+                        "      unit\n" +
+                        "    FROM axxx\n" +
+                        "      where unit  * 5 = 10 * type\n" +
+                        "    order by FMtrNumber");
 
         PrettyPrinter.print(antlrContext.root, 0, antlrContext.stream);
 
         SqlIssuesList issues = filler.getIssues(antlrContext);
         Assert.assertEquals(1, issues.getaLLIssues().size());
 
+    }
+
+    @Test
+    public void testIssues() throws IOException {
+
+        IssuesFiller filler = new IssuesFiller();
+
+        AntlrContext antlrContext = Dialects.TSQL
+                .parse("   SELECT DISTINCT\n" +
+                        "      number,\n" +
+                        "       name,\n" +
+                        "      unit\n" +
+                        "    FROM axxx\n" +
+                        "      where 1 = 1\n" +
+                        "    order by FMtrNumber");
+
+        PrettyPrinter.print(antlrContext.root, 0, antlrContext.stream);
+
+        SqlIssuesList issues = filler.getIssues(antlrContext);
+        Assert.assertEquals(2, issues.getaLLIssues().size());
     }
 
 }

@@ -15,10 +15,6 @@
  */
 package org.sonarsource.plugins.mybatis.scripting.xmltags;
 
-import org.sonarsource.plugins.mybatis.scripting.xmltags.DynamicContext;
-import org.sonarsource.plugins.mybatis.scripting.xmltags.ExpressionEvaluator;
-import org.sonarsource.plugins.mybatis.scripting.xmltags.SqlNode;
-
 /**
  * @author Clinton Begin
  */
@@ -35,10 +31,6 @@ public class IfSqlNode implements SqlNode {
 
   @Override
   public boolean apply(DynamicContext context) {
-    if (evaluator.evaluateBoolean(test, context.getBindings())) {
-      contents.apply(context);
-      return true;
-    }
     return false;
   }
 

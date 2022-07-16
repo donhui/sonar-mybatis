@@ -23,7 +23,7 @@ public class MyBatisPlugin implements Plugin {
         // qualityprofile
         context.addExtension(MyBatisQualityProfile.class);
         context.addExtension(PropertyDefinition.builder(Constants.PLUGIN_SQL_DIALECT).name("SQL dialect")
-                .description("SQL dialect for analysis").defaultValue("tsql").type(PropertyType.STRING).build());
+                .category(MYBATIS_CATEGORY).description("SQL dialect for analysis").defaultValue("tsql").type(PropertyType.STRING).build());
         // rules
         context.addExtensions(MybatisRulesDefinition.class, MyBatisLintSensor.class);
 

@@ -21,9 +21,6 @@ import org.sonarsource.plugins.mybatis.executor.keygen.KeyGenerator;
 import org.sonarsource.plugins.mybatis.executor.keygen.NoKeyGenerator;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
-import org.sonarsource.plugins.mybatis.mapping.BoundSql;
-import org.sonarsource.plugins.mybatis.mapping.SqlCommandType;
-import org.sonarsource.plugins.mybatis.mapping.StatementType;
 import org.sonarsource.plugins.mybatis.scripting.LanguageDriver;
 import org.sonarsource.plugins.mybatis.session.Configuration;
 
