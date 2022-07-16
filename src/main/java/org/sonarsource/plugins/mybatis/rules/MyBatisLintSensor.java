@@ -3,12 +3,6 @@ package org.sonarsource.plugins.mybatis.rules;
 import org.antlr.sql.dialects.Dialects;
 import org.antlr.sql.models.AntlrContext;
 import org.apache.commons.lang.StringUtils;
-import org.sonarsource.plugins.mybatis.builder.BuilderException;
-import org.sonarsource.plugins.mybatis.builder.xml.XMLMapperBuilder;
-import org.sonarsource.plugins.mybatis.mapping.BoundSql;
-import org.sonarsource.plugins.mybatis.mapping.MappedStatement;
-import org.sonarsource.plugins.mybatis.mapping.SqlCommandType;
-import org.sonarsource.plugins.mybatis.mapping.SqlSource;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentType;
@@ -18,27 +12,25 @@ import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.sensor.Sensor;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
-import org.sonar.api.batch.sensor.issue.NewIssue;
-import org.sonar.api.batch.sensor.issue.NewIssueLocation;
 import org.sonar.api.config.Configuration;
-import org.sonar.api.rule.RuleKey;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
 import org.sonar.plugins.xml.Xml;
-import org.sonarsource.plugins.mybatis.Constant;
 import org.sonarsource.plugins.mybatis.Constants;
+import org.sonarsource.plugins.mybatis.builder.xml.XMLMapperBuilder;
 import org.sonarsource.plugins.mybatis.fillers.Filler;
 import org.sonarsource.plugins.mybatis.fillers.IssuesFiller;
+import org.sonarsource.plugins.mybatis.mapping.BoundSql;
+import org.sonarsource.plugins.mybatis.mapping.MappedStatement;
+import org.sonarsource.plugins.mybatis.mapping.SqlCommandType;
+import org.sonarsource.plugins.mybatis.mapping.SqlSource;
 import org.sonarsource.plugins.mybatis.sensors.BaseSensor;
 import org.sonarsource.plugins.mybatis.utils.IOUtils;
-import org.sonarsource.plugins.mybatis.xml.MyBatisMapperXmlHandler;
 import org.sonarsource.plugins.mybatis.xml.XmlParser;
 
-import java.io.*;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -59,6 +51,8 @@ public class MyBatisLintSensor extends BaseSensor implements Sensor {
     protected SensorContext context;
     private List<String> stmtIdExcludeList = new ArrayList<>();
     private final Filler filler = new IssuesFiller();
+
+    private static final String MAPPER = "mapper";
 
 
     @Override
@@ -92,11 +86,10 @@ public class MyBatisLintSensor extends BaseSensor implements Sensor {
         LOGGER.debug("stmtIdExcludeList: " + stmtIdExcludeList.toString());
         // analysis mybatis mapper files and generate issues
         Map<String, InputFile> mybatisMapperMap = new HashMap<>(16);
-        List<File> reducedFileList = new ArrayList<>();
         // handle mybatis mapper file and add it to mybatisConfiguration
         FileSystem fs = context.fileSystem();
         Iterable<InputFile> xmlInputFiles = fs.inputFiles(fs.predicates().hasLanguage("xml"));
-        org.sonarsource.plugins.mybatis.session.Configuration mybatisConfiguration = new org.sonarsource.plugins.mybatis.session.Configuration();
+
         xmlInputFiles.forEach(xmlInputFile ->
                 service.execute(() -> {
                     String xmlFilePath = xmlInputFile.uri().getPath();
@@ -113,16 +106,19 @@ public class MyBatisLintSensor extends BaseSensor implements Sensor {
                                 publicIdOfDocType = "";
                             }
                         }
-                        if ("mapper".equals(rootElement.getName()) && publicIdOfDocType.contains("mybatis.org")) {
-                            LOGGER.info("handle mybatis mapper xml:" + xmlFilePath);
+                        if (MAPPER.equals(rootElement.getName()) && publicIdOfDocType.contains("mybatis.org")) {
+                            LOGGER.debug("handle mybatis mapper xml:" + xmlFilePath);
                             // handle mybatis mapper file
                             inputStream.reset();
                             mybatisMapperMap.put(xmlFilePath, xmlInputFile);
                             System.setProperty("javax.xml.parsers.DocumentBuilderFactory", "com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl");
-
+                            org.sonarsource.plugins.mybatis.session.Configuration mybatisConfiguration = new org.sonarsource.plugins.mybatis.session.Configuration();
                             XMLMapperBuilder xmlMapperBuilder = new XMLMapperBuilder(inputStream,
                                     mybatisConfiguration, xmlFilePath, mybatisConfiguration.getSqlFragments());
                             xmlMapperBuilder.parse();
+                            // parse MappedStatements
+                            Set<MappedStatement> stmts = new HashSet<>(mybatisConfiguration.getMappedStatements());
+                            parseStatement(stmts, mybatisMapperMap, sqlDialect);
                         }
                     } catch (DocumentException | IOException e) {
                         LOGGER.warn(e.toString());
@@ -133,91 +129,76 @@ public class MyBatisLintSensor extends BaseSensor implements Sensor {
         try {
             service.awaitTermination(Constants.PLUGIN_SQL_SCA_TIMEOUT_DEFAULT, TimeUnit.SECONDS);
             service.shutdownNow();
-        } catch (Throwable e) {
+        } catch (InterruptedException e) {
             LOGGER.warn("Unexpected exception while waiting for executor service to finish.", e);
+            Thread.currentThread().interrupt();
         }
-        // parse MappedStatements
-        Set<MappedStatement> stmts = new HashSet<>(mybatisConfiguration.getMappedStatements());
-        parseStatement(stmts, mybatisMapperMap, sqlDialect);
 
-        // clean reduced.xml
-        cleanFiles(reducedFileList);
+
     }
 
     private void parseStatement(Set<MappedStatement> stmts, Map<String, InputFile> mybatisMapperMap, Dialects sqlDialect) {
         // pools
         final ExecutorService service = Executors.newWorkStealingPool();
-        stmts.forEach(stmt ->   service.execute(() -> { {
-            if (null != stmt) {
-                if (stmt.getSqlCommandType() == SqlCommandType.SELECT
-                        || stmt.getSqlCommandType() == SqlCommandType.UPDATE
-                        || stmt.getSqlCommandType() == SqlCommandType.DELETE) {
-                    SqlSource sqlSource = stmt.getSqlSource();
-                    BoundSql boundSql = null;
-                    try {
-                        boundSql = sqlSource.getBoundSql(null);
-                    } catch (Exception e) {
-                        LOGGER.warn(e.getMessage(), e);
-                    }
-                    if (null != boundSql) {
-                        String sql = boundSql.getSql();
-                        String stmtId = stmt.getId();
-                        if (!StringUtils.endsWith(stmtId, "!selectKey")) {
-                            String reducedXmlFilePath = stmt.getResource();
-                            // windows environment
-                            if (!reducedXmlFilePath.startsWith(LEFT_SLASH)) {
-                                reducedXmlFilePath = LEFT_SLASH + reducedXmlFilePath.replace("\\", LEFT_SLASH);
+        stmts.forEach(stmt -> service.execute(() -> {
+            boolean isResult = null != stmt && (stmt.getSqlCommandType() == SqlCommandType.SELECT
+                    || stmt.getSqlCommandType() == SqlCommandType.UPDATE
+                    || stmt.getSqlCommandType() == SqlCommandType.DELETE);
+            if (isResult) {
+                SqlSource sqlSource = stmt.getSqlSource();
+                BoundSql boundSql = null;
+                try {
+                    boundSql = sqlSource.getBoundSql(null);
+                } catch (Exception e) {
+                    LOGGER.warn(e.getMessage(), e);
+                }
+                if (null != boundSql) {
+                    String sql = boundSql.getSql();
+                    String stmtId = stmt.getId();
+                    if (!StringUtils.endsWith(stmtId, "!selectKey")) {
+                        String reducedXmlFilePath = stmt.getResource();
+                        // windows environment
+                        if (!reducedXmlFilePath.startsWith(LEFT_SLASH)) {
+                            reducedXmlFilePath = LEFT_SLASH + reducedXmlFilePath.replace("\\", LEFT_SLASH);
+                        }
+                        LOGGER.debug("reducedMapperFilePath: " + reducedXmlFilePath);
+
+                        final InputFile sourceMapperFilePath = mybatisMapperMap.get(reducedXmlFilePath);
+
+                        LOGGER.debug("stmtId=" + stmtId);
+                        LOGGER.debug("sql=" + sql);
+
+                        if (stmtIdExcludeList.contains(stmtId)) {
+                            LOGGER.debug("stmt id exclude:" + stmtId);
+                        } else {
+                            // get lineNumber by mapper file and keyWord
+                            final String[] stmtIdSplit = stmtId.split("\\.");
+                            final String stmtIdTail = stmtIdSplit[stmtIdSplit.length - 1];
+                            final String sqlCmdType = stmt.getSqlCommandType().toString().toLowerCase();
+                            LOGGER.debug("sourceMapperFilePath: " + sourceMapperFilePath + " stmtIdTail:  "
+                                    + stmtIdTail + " sqlCmdType: " + sqlCmdType);
+                            int lineNumber = 0;
+                            try {
+                                InputStream inputStream = new ByteArrayInputStream(sourceMapperFilePath.contents().getBytes());
+                                lineNumber = getLineNumber(inputStream, stmtIdTail, sqlCmdType);
+                            } catch (IOException e) {
+                                LOGGER.warn("IO ERROR" + e);
                             }
-                            LOGGER.debug("reducedMapperFilePath: " + reducedXmlFilePath);
-
-                            final InputFile sourceMapperFilePath = mybatisMapperMap.get(reducedXmlFilePath);
-
-                            LOGGER.debug("stmtId=" + stmtId);
-                            LOGGER.debug("sql=" + sql);
-
-                            if (stmtIdExcludeList.contains(stmtId)) {
-                                LOGGER.debug("stmt id exclude:" + stmtId);
-                            } else {
-                                // get lineNumber by mapper file and keyWord
-                                final String[] stmtIdSplit = stmtId.split("\\.");
-                                final String stmtIdTail = stmtIdSplit[stmtIdSplit.length - 1];
-                                final String sqlCmdType = stmt.getSqlCommandType().toString().toLowerCase();
-                                LOGGER.debug("sourceMapperFilePath: " + sourceMapperFilePath + " stmtIdTail:  "
-                                        + stmtIdTail + " sqlCmdType: " + sqlCmdType);
-                                final int lineNumber;
-                                try {
-                                    InputStream inputStream = new ByteArrayInputStream(sourceMapperFilePath.contents().getBytes());
-                                    lineNumber = getLineNumber(inputStream, stmtIdTail, sqlCmdType);
-                                } catch (IOException e) {
-                                    throw new RuntimeException(e);
-                                }
-                                final AntlrContext ctx = sqlDialect.parse(sql, new ArrayList<>());
-                                filler.fill(sourceMapperFilePath, context, ctx, lineNumber);
-
-                            }
+                            final AntlrContext ctx = sqlDialect.parse(sql, new ArrayList<>());
+                            filler.fill(sourceMapperFilePath, context, ctx, lineNumber);
                         }
                     }
                 }
             }
-        }}));
+
+        }));
         service.shutdown();
         try {
             service.awaitTermination(Constants.PLUGIN_SQL_SCA_TIMEOUT_DEFAULT, TimeUnit.SECONDS);
             service.shutdownNow();
-        } catch (Throwable e) {
+        } catch (InterruptedException e) {
             LOGGER.warn("Unexpected exception while waiting for executor service to finish.", e);
-        }
-    }
-
-    private void cleanFiles(List<File> files) {
-        for (File file : files) {
-            if (file.exists() && file.isFile()) {
-                try {
-                    Files.delete(Paths.get(new URI("file:///" + file.getAbsolutePath().replace("\\", LEFT_SLASH))));
-                } catch (IOException | URISyntaxException e) {
-                    LOGGER.warn(e.toString());
-                }
-            }
+            Thread.currentThread().interrupt();
         }
     }
 
