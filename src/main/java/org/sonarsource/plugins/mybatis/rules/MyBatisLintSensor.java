@@ -66,7 +66,7 @@ public class MyBatisLintSensor extends BaseSensor implements Sensor {
         this.context = context;
         final Configuration config = context.config();
 
-        final String dialect = config.get(Constants.PLUGIN_SQL_DIALECT).orElse("mysql").toUpperCase();
+        final String dialect = config.get(Constants.PLUGIN_SQL_DIALECT).orElse("tsql").toUpperCase();
 
         final Dialects sqlDialect = Dialects.valueOf(dialect.toUpperCase());
 

@@ -46,7 +46,7 @@ public class MyBatisLintSensorTest {
         MyBatisLintSensor s = new MyBatisLintSensor();
         s.execute(ctxTester);
 
-        Assert.assertEquals(5, ctxTester.allIssues().size());
+        Assert.assertEquals(2, ctxTester.allIssues().size());
         Assert.assertEquals(0, ctxTester.allExternalIssues().size());
         Assert.assertEquals(0, ctxTester.allAdHocRules().size());
 

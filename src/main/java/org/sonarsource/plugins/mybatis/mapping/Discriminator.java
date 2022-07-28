@@ -15,7 +15,6 @@
  */
 package org.sonarsource.plugins.mybatis.mapping;
 
-import org.sonarsource.plugins.mybatis.mapping.ResultMapping;
 import org.sonarsource.plugins.mybatis.session.Configuration;
 
 import java.util.Collections;

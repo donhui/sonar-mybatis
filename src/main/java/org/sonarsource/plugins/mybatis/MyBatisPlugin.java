@@ -6,7 +6,6 @@ import org.sonar.api.config.PropertyDefinition;
 import org.sonar.api.resources.Qualifiers;
 import org.sonarsource.plugins.mybatis.languages.MyBatisQualityProfile;
 import org.sonarsource.plugins.mybatis.rules.MyBatisLintSensor;
-import org.sonarsource.plugins.mybatis.rules.MyBatisLintRulesDefinition;
 
 /**
  * This class is the entry point for all extensions. It is referenced in pom.xml.
