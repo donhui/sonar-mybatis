@@ -1,5 +1,4 @@
 [![Build Status](https://travis-ci.com/donhui/sonar-mybatis.svg?branch=master)](https://travis-ci.com/donhui/sonar-mybatis)
-[![SonarCloud Status](https://sonarcloud.io/api/project_badges/measure?project=donhui_sonar-mybatis&metric=alert_status)](https://sonarcloud.io/dashboard?id=donhui_sonar-mybatis)
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/donhui/sonar-mybatis)](https://github.com/donhui/sonar-mybatis/releases/)
 [![GitHub All Releases](https://img.shields.io/github/downloads/donhui/sonar-mybatis/total)](https://github.com/donhui/sonar-mybatis/releases/)
 
@@ -72,4 +71,6 @@ mvn clean compile -U -Dmaven.test.skip=true -Dmaven.javadoc.skip=true sonar:sona
 
 # Star 趋势图
 
-[![Stargazers over time](https://starchart.cc/donhui/sonar-mybatis.svg)](https://starchart.cc/donhui/sonar-mybatis)
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=donhui/sonar-mybatis&type=Date)](https://star-history.com/#donhui/sonar-mybatis&Date)
