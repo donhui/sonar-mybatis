@@ -41,6 +41,7 @@
         <sonar.apiVersion>9.0.0.45539</sonar.apiVersion>
         <jdk.min.version>1.8</jdk.min.version>
         <sonar.sources>src/main/java,src/main/resources</sonar.sources>
+        <sonar.requiredForLanguages>java,xml</sonar.requiredForLanguages>
     </properties>
 
     <dependencies>
@@ -108,7 +109,7 @@
             <plugin>
                 <groupId>org.sonarsource.sonar-packaging-maven-plugin</groupId>
                 <artifactId>sonar-packaging-maven-plugin</artifactId>
-                <version>1.18.0.372</version>
+                <version>1.23.0.740</version>
                 <extensions>true</extensions>
                 <configuration>
                     <pluginKey>mybatis</pluginKey>
