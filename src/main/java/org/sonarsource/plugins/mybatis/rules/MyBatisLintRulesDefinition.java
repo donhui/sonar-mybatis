@@ -29,7 +29,7 @@ public final class MyBatisLintRulesDefinition implements RulesDefinition {
         NewRule mybatisRule01 = repository.createRule(MYBATIS_MAPPER_CHECK_RULE_01.rule())
                 .setName("select statement should not include 1=1")
                 .setHtmlDescription("select statement should not include 1=1, it is a useless code and bad practice, suggest removing it.")
-                .setTags("mybatis", "select")
+                .setTags(Constant.RULE_TAG_MYBATIS, Constant.RULE_TAG_SELECT)
                 .setType(RuleType.BUG)
                 .setSeverity(Severity.MINOR);
         mybatisRule01.setDebtRemediationFunction(mybatisRule01.debtRemediationFunctions().linear("20min"));
@@ -37,7 +37,7 @@ public final class MyBatisLintRulesDefinition implements RulesDefinition {
         NewRule mybatisRule02 = repository.createRule(MYBATIS_MAPPER_CHECK_RULE_02.rule())
                 .setName("update statement should not include 1=1")
                 .setHtmlDescription("update statement should not include 1=1, it is a useless code and bad practice, suggest removing it.")
-                .setTags("mybatis", "update")
+                .setTags(Constant.RULE_TAG_MYBATIS, Constant.RULE_TAG_UPDATE)
                 .setType(RuleType.BUG)
                 .setSeverity(Severity.MAJOR);
         mybatisRule02.setDebtRemediationFunction(mybatisRule01.debtRemediationFunctions().linear("20min"));
@@ -45,7 +45,7 @@ public final class MyBatisLintRulesDefinition implements RulesDefinition {
         NewRule mybatisRule03 = repository.createRule(MYBATIS_MAPPER_CHECK_RULE_03.rule())
                 .setName("delete statement should not include 1=1")
                 .setHtmlDescription("delete statement should not include 1=1, it is a useless code and bad practice, suggest removing it.")
-                .setTags("mybatis", "delete")
+                .setTags(Constant.RULE_TAG_MYBATIS, Constant.RULE_TAG_DELETE)
                 .setType(RuleType.BUG)
                 .setSeverity(Severity.MAJOR);
         mybatisRule03.setDebtRemediationFunction(mybatisRule01.debtRemediationFunctions().linear("20min"));
@@ -56,7 +56,7 @@ public final class MyBatisLintRulesDefinition implements RulesDefinition {
                         "            the sql will not have where condition, then it will select all records from the table, which may lead to\n" +
                         "            performance issues. Suggest using simple parameters instead of elements (such as:\n" +
                         "            if,choose,when,otherwise,trim,where,set,foreach elemnt etc.) for required parameters.")
-                .setTags("mybatis", "select")
+                .setTags(Constant.RULE_TAG_MYBATIS, Constant.RULE_TAG_SELECT)
                 .setType(RuleType.BUG)
                 .setSeverity(Severity.MINOR);
         mybatisRule04.setDebtRemediationFunction(mybatisRule01.debtRemediationFunctions().linear("20min"));
@@ -67,7 +67,7 @@ public final class MyBatisLintRulesDefinition implements RulesDefinition {
                         "            the sql will not have where condition, then it will update all records from the table, which will result\n" +
                         "            production accident. Suggest using simple parameters instead of elements (such as:\n" +
                         "            if,choose,when,otherwise,trim,where,set,foreach elemnt etc.) for required parameters.")
-                .setTags("mybatis", "update")
+                .setTags(Constant.RULE_TAG_MYBATIS, Constant.RULE_TAG_UPDATE)
                 .setType(RuleType.BUG)
                 .setSeverity(Severity.MAJOR);
         mybatisRule05.setDebtRemediationFunction(mybatisRule01.debtRemediationFunctions().linear("20min"));
@@ -78,7 +78,7 @@ public final class MyBatisLintRulesDefinition implements RulesDefinition {
                         "            the sql will not have where condition, then it will delete all records from the table, which will result\n" +
                         "            production accident. Suggest using simple parameters instead of elements (such as:\n" +
                         "            if,choose,when,otherwise,trim,where,set,foreach elemnt etc.) for required parameters.")
-                .setTags("mybatis", "delete")
+                .setTags(Constant.RULE_TAG_MYBATIS, Constant.RULE_TAG_DELETE)
                 .setType(RuleType.BUG)
                 .setSeverity(Severity.CRITICAL);
         mybatisRule06.setDebtRemediationFunction(mybatisRule01.debtRemediationFunctions().linear("30min"));
@@ -86,7 +86,7 @@ public final class MyBatisLintRulesDefinition implements RulesDefinition {
         NewRule mybatisRule07 = repository.createRule(MYBATIS_MAPPER_CHECK_RULE_07.rule())
                 .setName("select statement should not include *")
                 .setHtmlDescription("select statement should not include *, it is not a bad practice, suggest using specific fields.")
-                .setTags("mybatis", "select")
+                .setTags(Constant.RULE_TAG_MYBATIS, Constant.RULE_TAG_SELECT)
                 .setType(RuleType.BUG)
                 .setSeverity(Severity.MINOR);
         mybatisRule07.setDebtRemediationFunction(mybatisRule01.debtRemediationFunctions().linear("20min"));
